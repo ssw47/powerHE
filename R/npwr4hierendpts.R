@@ -3,6 +3,7 @@ library(skellam)
 library(knitr)
 library(kableExtra)
 library(brio)
+library(VGAM)
 
 # function 1: this creates the Probability: win, lose, tie, WR, NB, WO, DOOR
 huiman.power.fun1 <- function(endpoint=NA, mu.a=NA, mean.diff=NA, mu.b=NA, sd.a=NA, sd.b=NA, delta=NA,
