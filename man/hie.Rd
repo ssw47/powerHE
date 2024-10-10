@@ -30,6 +30,10 @@ hie(
 This creates the Probability: win, lose, tie, WR, NB, WO, DOOR and creates sample size or power using results.
 }
 \examples{
+endpoints_input <- list(
+list(type = "TTE", hr = 0.8, er.b = 0.25, s = 12, tte.winning.direction = "GT")
+)
+hie(endpoints_input, sample.size = 100, alpha = 0.05, rratio = 0.5, output = "ALL")
 hie()
 }
 \keyword{endpoints}

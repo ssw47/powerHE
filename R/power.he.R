@@ -625,6 +625,10 @@ huiman.power.results <- function(results_in=NA,
 #' @keywords endpoints
 #' @export
 #' @examples
+#' endpoints_input <- list(
+#' list(type = "TTE", hr = 0.8, er.b = 0.25, s = 12, tte.winning.direction = "GT")
+#' )
+#' hie(endpoints_input, sample.size = 100, alpha = 0.05, rratio = 0.5, output = "ALL")
 #' hie()
 hie <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rratio = 0.5, output = "ALL") {
 
