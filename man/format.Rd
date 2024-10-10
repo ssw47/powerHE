@@ -2,15 +2,15 @@
 % Please edit documentation in R/power.he.R
 \name{format}
 \alias{format}
-\title{Format Results}
+\title{Format HIE Results}
 \usage{
 format(result)
 }
 \arguments{
-\item{result}{A list outputted from hie}
+\item{result}{A list}
 }
 \description{
-This formats the results
+This formats the results outputted from hie
 }
 \examples{
 format()
