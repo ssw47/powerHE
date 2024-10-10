@@ -6,6 +6,9 @@
 \usage{
 format(result)
 }
+\arguments{
+\item{result}{A list outputted from hie}
+}
 \description{
 This formats the results
 }
