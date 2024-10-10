@@ -704,7 +704,7 @@ hie <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rra
 # Define a function to format the results
 #' Format HIE Results
 #'
-#' This formats the results outputted from hie
+#' This formats the results outputted from the hie function
 #' @param result A list
 #' @keywords format
 #' @export

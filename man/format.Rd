@@ -10,7 +10,7 @@ format(result)
 \item{result}{A list}
 }
 \description{
-This formats the results outputted from hie
+This formats the results outputted from the hie function
 }
 \examples{
 format()
