@@ -620,8 +620,8 @@ huiman.power.results <- function(results_in=NA,
 #' @keywords endpoints
 #' @export
 #' @examples
-#' hierarchical_endpoints()
-hierarchical_endpoints <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rratio = 0.5, output = "ALL") {
+#' hie()
+hie <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rratio = 0.5, output = "ALL") {
 
   # Check if power or sample_size is provided
   if (is.na(power) && is.na(sample.size)) {
@@ -704,8 +704,8 @@ hierarchical_endpoints <- function(endpoints_input, sample.size = NA, power = NA
 #' @keywords format
 #' @export
 #' @examples
-#' formatResults()
-formatResults <- function(result) {
+#' format()
+format <- function(result) {
   # Initialize vectors for labels and values
   labels <- c()
   values <- c()
