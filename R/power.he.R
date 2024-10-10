@@ -616,7 +616,12 @@ huiman.power.results <- function(results_in=NA,
 #' Hierarchical Endpoints
 #'
 #' This creates the Probability: win, lose, tie, WR, NB, WO, DOOR and creates sample size or power using results.
-#' @param
+#' @param endpoints_input A list with each endpoint being a nested list
+#' @param sample.size An integer (enter either sample.size or power)
+#' @param power 0 to 1 (enter either sample.size or power)
+#' @param alpha Two-sided Type 1 Error
+#' @param rratio Randomization probability for Group A
+#' @param output Choose from: ALL, WR, WO, NB, DOOR
 #' @keywords endpoints
 #' @export
 #' @examples

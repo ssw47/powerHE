@@ -13,6 +13,19 @@ hie(
   output = "ALL"
 )
 }
+\arguments{
+\item{endpoints_input}{A list with each endpoint being a nested list}
+
+\item{sample.size}{An integer (enter either sample.size or power)}
+
+\item{power}{0 to 1 (enter either sample.size or power)}
+
+\item{alpha}{Two-sided Type 1 Error}
+
+\item{rratio}{Randomization probability for Group A}
+
+\item{output}{Choose from: ALL, WR, WO, NB, DOOR}
+}
 \description{
 This creates the Probability: win, lose, tie, WR, NB, WO, DOOR and creates sample size or power using results.
 }
