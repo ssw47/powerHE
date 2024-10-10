@@ -1,11 +1,14 @@
 Package: power.he
 Type: Package
-Title: What the Package Does (Title Case)
+Title: The R power.he package
 Version: 0.1.0
 Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Calculate sample size or power for hierarchical endpoints.
+The package can handle any type of outcomes (binary, continuous, count, ordinal, 
+time-to-event), and allows users to find power calculations for win ratios, 
+win odds, net benefits, and DOORs. Given a desired power, the package can 
+calculate the sample size needed. 
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
