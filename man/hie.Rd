@@ -27,7 +27,7 @@ hie(
 \item{output}{Choose from: ALL, WR, WO, NB, DOOR}
 }
 \description{
-This creates the Probability: win, lose, tie, WR, NB, WO, DOOR and creates sample size or power using results.
+This creates the probability: win, lose, tie, WR, NB, WO, DOOR and creates sample size or power using results.
 }
 \examples{
 # one TTE endpoint
