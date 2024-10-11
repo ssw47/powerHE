@@ -720,7 +720,12 @@ hie <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rra
 #' @keywords format
 #' @export
 #' @examples
-#' format()
+#' # one TTE endpoint
+#' endpoints_input <- list(
+#'  list(type = "TTE", hr = 0.8, er.b = 0.25, s = 12, tte.winning.direction = "GT")
+#' )
+#' results <- hie(endpoints_input, sample.size = 100, alpha = 0.05, rratio = 0.5, output = "ALL")
+#' format(results)
 format <- function(result) {
   # Initialize vectors for labels and values
   labels <- c()
