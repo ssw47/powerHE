@@ -617,6 +617,42 @@ huiman.power.results <- function(results_in=NA,
 #'
 #' This creates the probability: win, lose, tie, WR, NB, WO, DOOR and creates sample size or power using results.
 #' @param endpoints_input A list with each endpoint being a nested list
+#' \itemize{
+#'   \item Time to Event "TTE":
+#'    \itemize{
+#'       \item tte.winning.direction: winning direction ("GT" or "LT")
+#'       \item er.a OR hr: probability of event in group A OR hazard ratio (group A relative to group B)
+#'       \item er.b: probability of event in group B
+#'       \item s: follow-up time
+#'     }
+#'   \item Continuous "Continuous":
+#'    \itemize{
+#'       \item continuous.winning.direction: winning direction ("GT" or "LT")
+#'       \item mu.a OR mean.diff: mean in group A OR mean difference of group A minus group B
+#'       \item mu.b: mean in group B
+#'       \item sd.a: standard deviation in group A
+#'       \item sd.b: standard deviation in group B
+#'       \item delta: threshold to win
+#'       }
+#'   \item Binary (1/0) "Binary":
+#'    \itemize{
+#'       \item binary.winning.direction: winning direction ("GT" or "LT")
+#'       \item pi.a OR prob.diff: Prob(Y=1) in group A OR Prob(Y=1) of group A minus group B
+#'       \item pi.b: Prob(Y=1) in group B
+#'       }
+#'   \item Count Endpoint (such as # of events) "Count":
+#'    \itemize{
+#'       \item count.winning.direction: winning direction ("GT" or "LT")
+#'       \item lam.a OR rr: number of counts/events in group A OR relative rate of group A over group B
+#'       \item lam.b: number of counts/events in group B
+#'       }
+#'   \item Ordinal (1, 2, ..., J) "Ordinal":
+#'    \itemize{
+#'       \item ordinal.winning.direction: winning direction ("GT" or "LT")
+#'       \item pi.ordinal.a: Prob(Y=1), ..., Prob(Y=J) in group A (comma-separated)
+#'       \item pi.ordinal.b: Prob(Y=1), ..., Prob(Y=J) in group B (comma-separated)
+#'       }
+#' }
 #' @param sample.size An integer (enter either sample.size or power)
 #' @param power 0 to 1 (enter either sample.size or power)
 #' @param alpha Two-sided Type 1 Error
