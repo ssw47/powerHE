@@ -661,18 +661,15 @@ huiman.power.results <- function(results_in=NA,
 #' @keywords endpoints
 #' @export
 #' @examples
-#' # one TTE endpoint
+#' # Two continuous hierarchical endpoints:
+#' # The marginal distributions for Y_1A,Y_1B are N(15,60^2), N(4,60^2) and for
+#' # Y_2A,Y_2B are N(40,24^2), N(30,24^2). For both endpoints, the threshold to win
+#' # is chosen to be the same as δ_1=δ_2=5.
 #' endpoints_input <- list(
-#' list(type = "TTE", hr = 0.8, er.b = 0.25, s = 12, tte.winning.direction = "GT")
+#'   list(type = "Continuous", mu.a = 15, mu.b = 4, sd.a = 60, sd.b = 60, delta = 5, continuous.winning.direction = "GT"),
+#'   list(type = "Continuous", mu.a = 40, mu.b = 30, sd.a = 24, sd.b = 24, delta = 5, continuous.winning.direction = "GT")
 #' )
-#' hie(endpoints_input, sample.size = 100, alpha = 0.05, rratio = 0.5, output = "ALL")
-#'
-#' # two endpoints: Binary and Count
-#' endpoints_input <- list(
-#' list(type = "Binary", prob.diff = 0.1, pi.b = 0.2, binary.winning.direction = "GT"),
-#' list(type = "Count", rr = 1.5, lam.b = 5, count.winning.direction = "LT")
-#' )
-#' hie(endpoints_input, sample.size = 150, alpha = 0.05, rratio = 1, output = "ALL")
+#' hie(endpoints_input, power = 0.85, alpha = 0.05, rratio = 0.5, output = "ALL")
 hie <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rratio = 0.5, output = "ALL") {
 
   # Check if power or sample_size is provided
