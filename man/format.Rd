@@ -13,11 +13,20 @@ format(result)
 This formats the results outputted from the hie function
 }
 \examples{
-# one TTE endpoint
+# Example TTE endpoint with formatting
+
 endpoints_input <- list(
- list(type = "TTE", hr = 0.8, er.b = 0.25, s = 12, tte.winning.direction = "GT")
+  list(type = "TTE",
+       hr = 0.8,
+       er.b = 0.25,
+       s = 12,
+       tte.winning.direction = "GT")
 )
-results <- hie(endpoints_input, sample.size = 100, alpha = 0.05, rratio = 0.5, output = "ALL")
+results <- hie(endpoints_input,
+               sample.size = 100,
+               alpha = 0.05,
+               rratio = 0.5,
+               output = "ALL")
 format(results)
 }
 \keyword{format}
