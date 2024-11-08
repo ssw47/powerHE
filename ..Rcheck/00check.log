@@ -1,0 +1,183 @@
+* using log directory ‘/Users/sarahwu/Downloads/power.he/..Rcheck’
+* using R version 4.4.0 (2024-04-24)
+* using platform: aarch64-apple-darwin20
+* R was compiled by
+    Apple clang version 14.0.0 (clang-1400.0.29.202)
+    GNU Fortran (GCC) 12.2.0
+* running under: macOS 15.0.1
+* using session charset: UTF-8
+* using option ‘--as-cran’
+* checking for file ‘./DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘power.he’ version ‘0.1.0’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: ‘Sarah Wu <ssw47@duke.edu>’
+
+New submission
+
+Non-FOSS package license (What license is it under?)
+
+The build time stamp is missing.
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  ..pdf
+  .Rhistory
+  .gitignore
+  ..Rcheck
+  .Rproj.user
+  .git
+These were most likely included in error. See section ‘Package
+structure’ in the ‘Writing R Extensions’ manual.
+
+CRAN-pack does not know about
+  ..pdf
+  ..Rcheck
+  .git
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking serialization versions ... OK
+* checking whether package ‘power.he’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... WARNING
+Non-standard license specification:
+  What license is it under?
+Standardizable: FALSE
+Checking should be performed on sources prepared by ‘R CMD build’.
+* checking top-level files ... NOTE
+Non-standard files/directories found at top level:
+  ‘power.he.Rproj’ ‘power_he.pdf’
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directory with the name of a check directory:
+  ./..Rcheck
+Most likely, these were included erroneously.
+Found the following directory with the name of a version control directory:
+  ./.git
+These should not be in a package tarball.
+* checking code files for non-ASCII characters ... WARNING
+Found the following file with non-ASCII characters:
+  R/power.he.R
+Portable packages must use only ASCII characters in their R code and
+NAMESPACE directives, except perhaps in comments.
+Use \uxxxx escapes for other characters.
+Function ‘tools::showNonASCIIfile’ can help in finding non-ASCII
+characters in files.
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+huiman.power.fun1: no visible global function definition for ‘pnorm’
+huiman.power.results: no visible global function definition for ‘pnorm’
+huiman.power.results: no visible global function definition for ‘qnorm’
+pskellam: no visible global function definition for ‘pskellam.sp’
+Undefined global functions or variables:
+  pnorm pskellam.sp qnorm
+Consider adding
+  importFrom("stats", "pnorm", "qnorm")
+to your NAMESPACE file.
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  ‘dskellam’ ‘huiman.power.fun1’ ‘huiman.power.results’ ‘pskellam’
+All user-level objects in a package should have documentation entries.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking LazyData ... NOTE
+  'LazyData' is specified without a 'data' directory
+* checking examples ... ERROR
+Running examples in ‘power.he-Ex.R’ failed
+The error most likely occurred in:
+
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: format
+> ### Title: Format HIE Results
+> ### Aliases: format
+> ### Keywords: format
+> 
+> ### ** Examples
+> 
+> # Example TTE endpoint with formatting
+> 
+> endpoints_input <- list(
++   list(type = "TTE",
++        hr = 0.8,
++        er.b = 0.25,
++        s = 12,
++        tte.winning.direction = "GT")
++ )
+> results <- hie(endpoints_input,
++                sample.size = 100,
++                alpha = 0.05,
++                rratio = 0.5,
++                output = "ALL")
+> format(results)
+                          Label Value
+1  Marginal probability of ties 0.596
+2   Overall probability of ties 0.596
+3           Marginal win ratios  1.25
+4            Overall win ratios  1.25
+5             Marginal win odds 1.094
+6              Overall win odds 1.094
+7         Marginal net benefits 0.045
+8          Overall net benefits 0.045
+9                Marginal DOORs 0.522
+10                Overall DOORs 0.522
+11         Power for win ratios  0.07
+12           Power for win odds  0.07
+13       Power for net benefits  0.07
+14              Power for DOORs  0.07
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("format", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+Error in format(x[1L:3L], digits = 7L) : unused argument (digits = 7)
+Calls: <Anonymous> -> <Anonymous>
+Execution halted
+* checking PDF version of manual ... OK
+* checking HTML version of manual ... NOTE
+Found the following HTML validation problems:
+format.html:15:44 (format.Rd:5): Error: <main> is not recognized!
+format.html:15:44 (format.Rd:5): Warning: discarding unexpected <main>
+format.html:62:1 (format.Rd:30): Warning: discarding unexpected </main>
+format.html:4:1 (format.Rd:5): Warning: <link> inserting "type" attribute
+format.html:12:1 (format.Rd:5): Warning: <script> proprietary attribute "onload"
+format.html:12:1 (format.Rd:5): Warning: <script> inserting "type" attribute
+format.html:17:1 (format.Rd:5): Warning: <table> lacks "summary" attribute
+format.html:35:1 (format.Rd:10): Warning: <table> lacks "summary" attribute
+hie.html:15:44 (hie.Rd:5): Error: <main> is not recognized!
+hie.html:15:44 (hie.Rd:5): Warning: discarding unexpected <main>
+hie.html:290:1 (hie.Rd:194): Warning: discarding unexpected </main>
+hie.html:4:1 (hie.Rd:5): Warning: <link> inserting "type" attribute
+hie.html:12:1 (hie.Rd:5): Warning: <script> proprietary attribute "onload"
+hie.html:12:1 (hie.Rd:5): Warning: <script> inserting "type" attribute
+hie.html:17:1 (hie.Rd:5): Warning: <table> lacks "summary" attribute
+hie.html:42:1 (hie.Rd:17): Warning: <table> lacks "summary" attribute
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+Status: 1 ERROR, 4 WARNINGs, 6 NOTEs

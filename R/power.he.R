@@ -668,6 +668,7 @@ huiman.power.results <- function(results_in=NA,
 #' # 30, respectively, and standard deviations of 24. For both endpoints, the
 #' # threshold to win is chosen to be the same, with both delta1 and delta2
 #' # equal to 5.
+#' # Find the required sample size to achieve a power of 0.85 for win ratios.
 #'
 #' endpoints_input <- list(
 #'   list(type = "Continuous",
@@ -696,6 +697,7 @@ huiman.power.results <- function(results_in=NA,
 #' # a success probability of 0.90 and 0.85, respectively, for one trial. For
 #' # Y2A and Y2B, the marginal probabilities are binomial distributions with
 #' # success probabilities of 0.80 and 0.75, respectively, for one trial.
+#' # Find the achieved power for win ratios with a sample size of 1098.
 #'
 #' endpoints_input <- list(
 #'   list(type = "Binary",
@@ -708,7 +710,7 @@ huiman.power.results <- function(results_in=NA,
 #'       binary.winning.direction = "GT")
 #' )
 #' hie(endpoints_input,
-#'     power = 0.85,
+#'     sample.size = 1098,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
 #'     output = "ALL")
@@ -718,6 +720,7 @@ huiman.power.results <- function(results_in=NA,
 #' # success probabilities of 0.96 and 0.95, respectively, for one trial. For
 #' # Y2A and Y2B, the marginal distributions are normal distributions with means
 #' # 36 and 31, respectively, and standard deviations of 24.
+#' # Find the required sample size to achieve a power of 0.85 for win ratios.
 #'
 #' endpoints_input <- list(
 #'   list(type = "Binary",
@@ -744,6 +747,7 @@ huiman.power.results <- function(results_in=NA,
 #' # distribution is a Poisson distribution with a mean of 0.75, and for Y2B, it
 #' # is a normal distribution with a mean of 1.1. The follow-up time for all
 #' # measurements is 5 years.
+#' # Find the achieved power for win ratios with a sample size of 770.
 #'
 #' endpoints_input <- list(
 #'   list(type = "TTE",
@@ -757,7 +761,7 @@ huiman.power.results <- function(results_in=NA,
 #'        lam.b = 1.1)
 #' )
 #' hie(endpoints_input,
-#'     power = 0.85,
+#'     sample.size = 770,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
 #'     output = "ALL")
@@ -771,6 +775,7 @@ huiman.power.results <- function(results_in=NA,
 #' # represent the likelihood of a subject being in categories 1, 2, or 3. We
 #' # assume that a subject in a higher ordinal category wins over a subject in a
 #' # lower ordinal category.
+#' # Find the required sample size to achieve a power of 0.85 for win ratios.
 #'
 #' endpoints_input <- list(
 #'   list(type = "Ordinal",
