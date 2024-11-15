@@ -686,7 +686,7 @@ huiman.power.results <- function(results_in=NA,
 #'        delta = 5,
 #'        continuous.winning.direction = "GT")
 #' )
-#' hie(endpoints_input,
+#' HE(endpoints_input,
 #'     power = 0.85,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
@@ -709,7 +709,7 @@ huiman.power.results <- function(results_in=NA,
 #'       pi.b = 0.75,
 #'       binary.winning.direction = "GT")
 #' )
-#' hie(endpoints_input,
+#' HE(endpoints_input,
 #'     sample.size = 1098,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
@@ -735,7 +735,7 @@ huiman.power.results <- function(results_in=NA,
 #'        delta = 5,
 #'        continuous.winning.direction = "GT")
 #' )
-#' hie(endpoints_input,
+#' HE(endpoints_input,
 #'     power = 0.85,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
@@ -760,7 +760,7 @@ huiman.power.results <- function(results_in=NA,
 #'        lam.a = 0.75,
 #'        lam.b = 1.1)
 #' )
-#' hie(endpoints_input,
+#' HE(endpoints_input,
 #'     sample.size = 770,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
@@ -787,12 +787,12 @@ huiman.power.results <- function(results_in=NA,
 #'        pi.ordinal.b = c(0.4, 0.3, 0.3),
 #'        ordinal.winning.direction = "GT")
 #' )
-#' hie(endpoints_input,
+#' HE(endpoints_input,
 #'     power = 0.85,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
 #'     output = "ALL")
-hie <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rratio = 0.5, output = "ALL") {
+HE <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rratio = 0.5, output = "ALL") {
 
   # Check if power or sample_size is provided
   if (is.na(power) && is.na(sample.size)) {
@@ -868,9 +868,9 @@ hie <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rra
 }
 
 # Define a function to format the results
-#' Format HIE Results
+#' Format HE Results
 #'
-#' This formats the results outputted from the hie function
+#' This formats the results outputted from the HE function
 #' @param result A list
 #' @keywords format
 #' @export
@@ -884,7 +884,7 @@ hie <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rra
 #'        s = 12,
 #'        tte.winning.direction = "GT")
 #' )
-#' results <- hie(endpoints_input,
+#' results <- HE(endpoints_input,
 #'                sample.size = 100,
 #'                alpha = 0.05,
 #'                rratio = 0.5,
