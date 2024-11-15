@@ -1,16 +1,16 @@
-Package: power.he
+Package: powerHE
 Type: Package
-Title: The R 'power.he' Package
+Title: The R 'powerHE' Package
 Version: 0.1.0
 Author: Dylan Thibault and Sarah Wu
-Maintainer: Sarah Wu <ssw47@duke.edu>
+Maintainer: Sarah Wu <O2E@duke.edu>
 Description: Calculate sample size or power for hierarchical endpoints. 
     The package can handle any type of outcomes (binary, continuous, count, 
     ordinal, time-to-event), and allows users to find power calculations for 
     win ratios, win odds, net benefits, and DOORs. Given a desired power, 
     the package can calculate the sample size needed. 
-License: What license is it under?
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
-Built: R 4.4.0; ; 2024-11-08 19:34:04 UTC; unix
+Built: R 4.4.0; ; 2024-11-15 20:04:31 UTC; unix

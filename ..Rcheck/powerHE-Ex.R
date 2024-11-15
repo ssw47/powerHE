@@ -1,7 +1,7 @@
-pkgname <- "power.he"
+pkgname <- "powerHE"
 source(file.path(R.home("share"), "R", "examples-header.R"))
 options(warn = 1)
-base::assign(".ExTimings", "power.he-Ex.timings", pos = 'CheckExEnv')
+base::assign(".ExTimings", "powerHE-Ex.timings", pos = 'CheckExEnv')
 base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
 base::assign(".format_ptime",
 function(x) {
@@ -13,54 +13,20 @@ function(x) {
 pos = 'CheckExEnv')
 
 ### * </HEADER>
-library('power.he')
+library('powerHE')
 
 base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
 cleanEx()
-nameEx("format")
-### * format
+nameEx("HE")
+### * HE
 
 flush(stderr()); flush(stdout())
 
 base::assign(".ptime", proc.time(), pos = "CheckExEnv")
-### Name: format
-### Title: Format HIE Results
-### Aliases: format
-### Keywords: format
-
-### ** Examples
-
-# Example TTE endpoint with formatting
-
-endpoints_input <- list(
-  list(type = "TTE",
-       hr = 0.8,
-       er.b = 0.25,
-       s = 12,
-       tte.winning.direction = "GT")
-)
-results <- hie(endpoints_input,
-               sample.size = 100,
-               alpha = 0.05,
-               rratio = 0.5,
-               output = "ALL")
-format(results)
-
-
-
-base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
-base::cat("format", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
-cleanEx()
-nameEx("hie")
-### * hie
-
-flush(stderr()); flush(stdout())
-
-base::assign(".ptime", proc.time(), pos = "CheckExEnv")
-### Name: hie
+### Name: HE
 ### Title: Hierarchical Endpoints
-### Aliases: hie
+### Aliases: HE
 ### Keywords: endpoints
 
 ### ** Examples
@@ -72,6 +38,7 @@ base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 # 30, respectively, and standard deviations of 24. For both endpoints, the
 # threshold to win is chosen to be the same, with both delta1 and delta2
 # equal to 5.
+# Find the required sample size to achieve a power of 0.85 for win ratios.
 
 endpoints_input <- list(
   list(type = "Continuous",
@@ -89,7 +56,7 @@ endpoints_input <- list(
        delta = 5,
        continuous.winning.direction = "GT")
 )
-hie(endpoints_input,
+HE(endpoints_input,
     power = 0.85,
     alpha = 0.05,
     rratio = 0.5,
@@ -100,6 +67,7 @@ hie(endpoints_input,
 # a success probability of 0.90 and 0.85, respectively, for one trial. For
 # Y2A and Y2B, the marginal probabilities are binomial distributions with
 # success probabilities of 0.80 and 0.75, respectively, for one trial.
+# Find the achieved power for win ratios with a sample size of 1098.
 
 endpoints_input <- list(
   list(type = "Binary",
@@ -111,8 +79,8 @@ endpoints_input <- list(
       pi.b = 0.75,
       binary.winning.direction = "GT")
 )
-hie(endpoints_input,
-    power = 0.85,
+HE(endpoints_input,
+    sample.size = 1098,
     alpha = 0.05,
     rratio = 0.5,
     output = "ALL")
@@ -122,6 +90,7 @@ hie(endpoints_input,
 # success probabilities of 0.96 and 0.95, respectively, for one trial. For
 # Y2A and Y2B, the marginal distributions are normal distributions with means
 # 36 and 31, respectively, and standard deviations of 24.
+# Find the required sample size to achieve a power of 0.85 for win ratios.
 
 endpoints_input <- list(
   list(type = "Binary",
@@ -136,7 +105,7 @@ endpoints_input <- list(
        delta = 5,
        continuous.winning.direction = "GT")
 )
-hie(endpoints_input,
+HE(endpoints_input,
     power = 0.85,
     alpha = 0.05,
     rratio = 0.5,
@@ -148,6 +117,7 @@ hie(endpoints_input,
 # distribution is a Poisson distribution with a mean of 0.75, and for Y2B, it
 # is a normal distribution with a mean of 1.1. The follow-up time for all
 # measurements is 5 years.
+# Find the achieved power for win ratios with a sample size of 770.
 
 endpoints_input <- list(
   list(type = "TTE",
@@ -160,8 +130,8 @@ endpoints_input <- list(
        lam.a = 0.75,
        lam.b = 1.1)
 )
-hie(endpoints_input,
-    power = 0.85,
+HE(endpoints_input,
+    sample.size = 770,
     alpha = 0.05,
     rratio = 0.5,
     output = "ALL")
@@ -175,6 +145,7 @@ hie(endpoints_input,
 # represent the likelihood of a subject being in categories 1, 2, or 3. We
 # assume that a subject in a higher ordinal category wins over a subject in a
 # lower ordinal category.
+# Find the required sample size to achieve a power of 0.85 for win ratios.
 
 endpoints_input <- list(
   list(type = "Ordinal",
@@ -186,7 +157,7 @@ endpoints_input <- list(
        pi.ordinal.b = c(0.4, 0.3, 0.3),
        ordinal.winning.direction = "GT")
 )
-hie(endpoints_input,
+HE(endpoints_input,
     power = 0.85,
     alpha = 0.05,
     rratio = 0.5,
@@ -195,7 +166,41 @@ hie(endpoints_input,
 
 
 base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
-base::cat("hie", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+base::cat("HE", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+cleanEx()
+nameEx("format")
+### * format
+
+flush(stderr()); flush(stdout())
+
+base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+### Name: format
+### Title: Format HE Results
+### Aliases: format
+### Keywords: format
+
+### ** Examples
+
+# Example TTE endpoint with formatting
+
+endpoints_input <- list(
+  list(type = "TTE",
+       hr = 0.8,
+       er.b = 0.25,
+       s = 12,
+       tte.winning.direction = "GT")
+)
+results <- HE(endpoints_input,
+               sample.size = 100,
+               alpha = 0.05,
+               rratio = 0.5,
+               output = "ALL")
+format(results)
+
+
+
+base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+base::cat("format", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 ### * <FOOTER>
 ###
 cleanEx()

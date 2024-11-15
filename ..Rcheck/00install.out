@@ -1,4 +1,4 @@
-* installing *source* package ‘power.he’ ...
+* installing *source* package ‘powerHE’ ...
 ** using staged installation
 ** R
 ** byte-compile and prepare package for lazy loading
@@ -8,4 +8,4 @@
 ** testing if installed package can be loaded from temporary location
 ** testing if installed package can be loaded from final location
 ** testing if installed package keeps a record of temporary installation path
-* DONE (power.he)
+* DONE (powerHE)
