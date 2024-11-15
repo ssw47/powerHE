@@ -1,1 +1,4 @@
 exportPattern("^[[:alpha:]]+")
+importFrom("stats", "pnorm", "qnorm")
+importFrom("skellam", "pskellam.sp")
+

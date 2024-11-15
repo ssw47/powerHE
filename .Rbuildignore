@@ -1,2 +1,13 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\\.git$              # Ignore the .git directory
+^\\.gitignore$        # Ignore the .gitignore file
+^\\.Rproj$            # Ignore the RStudio project file
+^\\.Rproj\\.user$     # Ignore RStudio user settings folder
+^\\.Rhistory$         # Ignore R history files
+^\\.Rcheck$           # Ignore R CMD check output
+^.*\\.pdf$            # Ignore PDF documents (e.g., vignettes in progress)
+^README\\.md$         # If you generate README.md from .Rmd, ignore the .md file
+^.*\\.log$            # Ignore log files
+^powerHE\.pdf$
+^\..*$

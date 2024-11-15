@@ -1,4 +1,4 @@
-* using log directory ‘/Users/sarahwu/Downloads/power.he/..Rcheck’
+* using log directory ‘/Users/sarahwu/Downloads/powerHE/..Rcheck’
 * using R version 4.4.0 (2024-04-24)
 * using platform: aarch64-apple-darwin20
 * R was compiled by
@@ -21,7 +21,11 @@ The build time stamp is missing.
 * checking package dependencies ... OK
 * checking if this is a source package ... OK
 * checking if there is a namespace ... OK
-* checking for executable files ... OK
+* checking for executable files ... WARNING
+Found the following executable file:
+  .git/objects/fe/dc98253b0b2ac284ccaddd75a50d1853f33357
+Source packages should not contain undeclared executable files.
+See section ‘Package structure’ in the ‘Writing R Extensions’ manual.
 * checking for hidden files and directories ... NOTE
 Found the following hidden files and directories:
   ..pdf
@@ -487,4 +491,4 @@ format.html:35:1 (format.Rd:10): Warning: <table> lacks "summary" attribute
 * checking for non-standard things in the check directory ... OK
 * checking for detritus in the temp directory ... OK
 * DONE
-Status: 1 ERROR, 3 WARNINGs, 7 NOTEs
+Status: 1 ERROR, 4 WARNINGs, 7 NOTEs

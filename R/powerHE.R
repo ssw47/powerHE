@@ -2,8 +2,9 @@ library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(brio)
+library(skellam)
 
-#import dskellam function
+#' @noRd
 dskellam <- function(x, lambda1, lambda2=lambda1, log=FALSE){
   # density (PMF) of Skellam distriubition (difference of Poissons)
   if (missing(x)|missing(lambda1)) stop("first 2 arguments are required")
@@ -70,7 +71,7 @@ dskellam <- function(x, lambda1, lambda2=lambda1, log=FALSE){
   ret
 }
 
-#import pskellam function
+#' @noRd
 pskellam <- function(q, lambda1, lambda2=lambda1, lower.tail=TRUE, log.p=FALSE){
   # CDF of Skellam distriubition (difference of Poissons)
   if (missing(q)|missing(lambda1)) stop("first 2 arguments are required")
@@ -109,8 +110,7 @@ pskellam <- function(q, lambda1, lambda2=lambda1, lower.tail=TRUE, log.p=FALSE){
   ret
 }
 
-
-# function 1: this creates the Probability: win, lose, tie, WR, NB, WO, DOOR
+#' @noRd
 huiman.power.fun1 <- function(endpoint=NA, mu.a=NA, mean.diff=NA, mu.b=NA, sd.a=NA, sd.b=NA, delta=NA,
                               pi.a=NA, prob.diff=NA, pi.b=NA,
                               er.a=NA, hr=NA, er.b=NA, s=NA,
@@ -250,7 +250,7 @@ huiman.power.fun1 <- function(endpoint=NA, mu.a=NA, mean.diff=NA, mu.b=NA, sd.a=
 
     # Check if either pi.a or prob.diff is provided, not both, along with pi.b
     if (length(pi.ordinal.b) != length(pi.ordinal.a)) {
-      stop("You must enter 'Prob(Y=1), …, Prob(Y=J) in group A' along with 'Prob(Y=1), …, Prob(Y=J) in group B'")
+      stop("You must enter 'Prob(Y=1), ..., Prob(Y=J) in group A' along with 'Prob(Y=1), ..., Prob(Y=J) in group B'")
     }
 
     # Additional checks for required fields
@@ -390,7 +390,7 @@ huiman.power.fun1 <- function(endpoint=NA, mu.a=NA, mean.diff=NA, mu.b=NA, sd.a=
 
 }
 
-# function 2: this creates sample size or power using results from function 1
+#' @noRd
 huiman.power.results <- function(results_in=NA,
                                  sample.size=NA, power=NA,
                                  alpha=0.05, rratio=0.5, output = "ALL") {
