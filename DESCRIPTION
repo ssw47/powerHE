@@ -11,7 +11,6 @@ Description: Calculate sample size or power for hierarchical endpoints.
     the package can calculate the sample size needed. 
 License: GPL (>= 2)
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 7.3.2
 Imports: skellam
 

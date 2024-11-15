@@ -1,4 +1,5 @@
-exportPattern("^[[:alpha:]]+")
+export(HE)
+export(format)
 importFrom("stats", "pnorm", "qnorm")
 importFrom("skellam", "pskellam.sp")
 
