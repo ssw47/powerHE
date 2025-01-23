@@ -14,70 +14,71 @@ powerHE(
 )
 }
 \arguments{
-\item{endpoints_input}{A list with each endpoint being a nested list
+\item{endpoints_input}{A list with each endpoint being a nested list.
 \itemize{
-  \item Time to Event "TTE":
+  \item \bold{Time to Event (type = "TTE")}:
    \itemize{
       \item tte.winning.direction: winning direction. Input "GT" if longer time to event is a win or "LT" if shorter time to event is a win.
-      \item s: follow-up time
-      \item input either:
+      \item s: follow-up time.
+      \item input \bold{either}:
       \itemize{
          \item er.a and er.b: where er.a is the probability of event in group A at the specified follow-up time and er.b is the probability of event in group B at the specified follow-up time.
          \item hr and er.b: where hr is the hazard ratio (group A relative to group B) and er.b is the probability of event in group B at the specified follow-up time.
       }
     }
-  \item Continuous "Continuous":
+  \item \bold{Continuous (type = "Continuous")}:
    \itemize{
       \item continuous.winning.direction: winning direction. Input "GT" if larger value is a win or "LT" if smaller value is a win.
-.      \item input either:
+.      \item input \bold{either}:
       \itemize{
          \item mu.a and mu.b: where mu.a is the mean in group A and mu.b is the mean in group B.
          \item mean.diff and mu.b: where mean.diff is the mean difference of group A minus group B and mu.b is the mean in group B.
       }
-      \item sd.a: standard deviation in group A
-      \item sd.b: standard deviation in group B
+      \item sd.a: standard deviation in group A.
+      \item sd.b: standard deviation in group B.
       \item delta: threshold to win. If the winning direction is “GT,” group A wins over group B for a pair of subjects if the value from the subject in group A exceeds the value from the subject in group B by more than delta.
       }
-  \item Binary (1/0) "Binary":
+  \item \bold{Binary (1/0) (type = "Binary")}:
    \itemize{
       \item binary.winning.direction: winning direction. Input "GT" if 1 is a win or "LT" if a 0 is a win.
-      \item input either:
+      \item input \bold{either}:
       \itemize{
          \item pi.a and pi.b: where pi.a is the Prob(Y=1) in group A and pi.b is the Prob(Y=1) in group B.
          \item prob.diff and pi.b: where prob.diff is the Prob(Y=1) of group A minus group B and pi.b is the Prob(Y=1) in group B.
       }
    }
-  \item Count Endpoint (such as # of events) "Count":
+  \item \bold{Count (# of events) (type = "Count")}:
    \itemize{
       \item count.winning.direction: winning direction. Input "GT" if a larger number of counts is a win or "LT" if a smaller number of counts is a win.
+      \item input \bold{either}:
       \itemize{
          \item lam.a and lam.b: where lam.a is the number of counts/events in group A and lam.b is the number of counts/events in group B.
          \item rr and lam.b: where rr is the relative rate of group A over group B and lam.b is the number of counts/events in group B.
       }
    }
-  \item Ordinal (1, 2, ..., J) "Ordinal":
+  \item \bold{Ordinal (1, 2, ..., J) (type = "Ordinal")}:
    \itemize{
       \item ordinal.winning.direction: winning direction. Input "GT" if higher level of category is a win or "LT" if lower level of category is a win.
-      \item pi.ordinal.a: Prob(Y=1), ..., Prob(Y=J) in group A (comma-separated)
-      \item pi.ordinal.b: Prob(Y=1), ..., Prob(Y=J) in group B (comma-separated)
+      \item pi.ordinal.a: Prob(Y=1), ..., Prob(Y=J) in group A (comma-separated).
+      \item pi.ordinal.b: Prob(Y=1), ..., Prob(Y=J) in group B (comma-separated).
       }
 }}
 
-\item{sample.size}{An integer (enter either sample.size or power)}
+\item{sample.size}{An integer (enter either sample.size or power).}
 
-\item{power}{0 to 1 (enter either sample.size or power)}
+\item{power}{0 to 1 (enter either sample.size or power).}
 
-\item{alpha}{Two-sided Type 1 Error}
+\item{alpha}{Two-sided Type 1 Error.}
 
 \item{rratio}{Probability randomized to group A (As a result, 1 - rratio will be the probability randomized to group B).}
 
 \item{output}{Specifies the output type. Options are:
 \itemize{
-  \item ALL (default): Displays all results based on all parameters
-  \item WR: Displays results related to win ratios
-  \item WO: Displays results related to win odds
-  \item NB: Displays results related to net benefits
-  \item DOOR: Displays results related to desirability of outcome ranking
+  \item \bold{ALL} (default): Displays all results based on all parameters.
+  \item \bold{WR}: Displays results related to win ratios.
+  \item \bold{WO}: Displays results related to win odds.
+  \item \bold{NB}: Displays results related to net benefits.
+  \item \bold{DOOR}: Displays results related to desirability of outcome ranking.
   }}
 }
 \description{

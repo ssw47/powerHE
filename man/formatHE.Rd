@@ -7,13 +7,13 @@
 formatHE(result)
 }
 \arguments{
-\item{result}{A list}
+\item{result}{A list (powerHE returns a list).}
 }
 \description{
-This formats the results outputted from the HE function
+This function formats the results outputted from the powerHE function. See below (pdf) or use ?powerHE (in R) to view its documentation.
 }
 \examples{
-# Example TTE endpoint with formatting
+# Example TTE endpoint with formatting:
 
 endpoints_input <- list(
   list(type = "TTE",
