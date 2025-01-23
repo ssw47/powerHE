@@ -236,7 +236,7 @@ endpoints_input <- list(
        tte.winning.direction = "GT",
        hr.a = 0.8,
        er.b = 0.63212,
-       s = 5,),
+       s = 5),
   list(type = "Count",
        count.winning.direction = "LT",
        lam.a = 0.75,
