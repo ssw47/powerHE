@@ -615,7 +615,17 @@ huiman.power.results <- function(results_in=NA,
 
 #' Hierarchical Endpoints
 #'
-#' This creates the probability: win, lose, tie, WR, NB, WO, DOOR and creates sample size or power using results.
+#' This function can calculate sample size given power or vice versa based on
+#' inputs which represent the marginals of each endpoint. The function assumes
+#' that the correlation between endpoints are 0, and it can output the following
+#' probabilities: marginal and overall probability of ties, marginal and overall
+#' WR (win ratios), marginal and overall WO (win odds), marginal and overall NB
+#' (net benefits), marginal and overall DOOR (desirability of outcome ranking).
+#' If given power, the function can calculate sample size for WR, WO, NB, and
+#' DOOR. If given sample size, the function can calculate power for WR, WO, NB,
+#' and DOOR. It is suggested to assign the output to an object, which defaults
+#' to showing all the probabilities listed above. Examples are given below.
+
 #' @param endpoints_input A list with each endpoint being a nested list
 #' \itemize{
 #'   \item Time to Event "TTE":
@@ -686,7 +696,7 @@ huiman.power.results <- function(results_in=NA,
 #'        delta = 5,
 #'        continuous.winning.direction = "GT")
 #' )
-#' HE(endpoints_input,
+#' powerHE(endpoints_input,
 #'     power = 0.85,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
@@ -709,7 +719,7 @@ huiman.power.results <- function(results_in=NA,
 #'       pi.b = 0.75,
 #'       binary.winning.direction = "GT")
 #' )
-#' HE(endpoints_input,
+#' powerHE(endpoints_input,
 #'     sample.size = 1098,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
@@ -735,7 +745,7 @@ huiman.power.results <- function(results_in=NA,
 #'        delta = 5,
 #'        continuous.winning.direction = "GT")
 #' )
-#' HE(endpoints_input,
+#' powerHE(endpoints_input,
 #'     power = 0.85,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
@@ -760,7 +770,7 @@ huiman.power.results <- function(results_in=NA,
 #'        lam.a = 0.75,
 #'        lam.b = 1.1)
 #' )
-#' HE(endpoints_input,
+#' powerHE(endpoints_input,
 #'     sample.size = 770,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
@@ -787,12 +797,12 @@ huiman.power.results <- function(results_in=NA,
 #'        pi.ordinal.b = c(0.4, 0.3, 0.3),
 #'        ordinal.winning.direction = "GT")
 #' )
-#' HE(endpoints_input,
+#' powerHE(endpoints_input,
 #'     power = 0.85,
 #'     alpha = 0.05,
 #'     rratio = 0.5,
 #'     output = "ALL")
-HE <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rratio = 0.5, output = "ALL") {
+powerHE <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rratio = 0.5, output = "ALL") {
 
   # Check if power or sample_size is provided
   if (is.na(power) && is.na(sample.size)) {
@@ -868,11 +878,11 @@ HE <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rrat
 }
 
 # Define a function to format the results
-#' Format HE Results
+#' Format powerHE Results
 #'
 #' This formats the results outputted from the HE function
 #' @param result A list
-#' @keywords format
+#' @keywords formatHE
 #' @export
 #' @examples
 #' # Example TTE endpoint with formatting
@@ -884,13 +894,13 @@ HE <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rrat
 #'        s = 12,
 #'        tte.winning.direction = "GT")
 #' )
-#' results <- HE(endpoints_input,
+#' results <- powerHE(endpoints_input,
 #'                sample.size = 100,
 #'                alpha = 0.05,
 #'                rratio = 0.5,
 #'                output = "ALL")
-#' format(results)
-format <- function(result) {
+#' formatHE(results)
+formatHE <- function(result) {
   # Initialize vectors for labels and values
   labels <- c()
   values <- c()
