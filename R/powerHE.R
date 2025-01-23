@@ -966,7 +966,7 @@ powerHE <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05,
 #' @keywords formatHE
 #' @export
 #' @examples
-#' # Example TTE endpoint with formatting
+#' # Example TTE endpoint with formatting:
 #'
 #' endpoints_input <- list(
 #'   list(type = "TTE",
@@ -1034,5 +1034,4 @@ formatHE <- function(result) {
   res_df <- data.frame(Label = labels, Value = values, stringsAsFactors = FALSE)
 
   return(res_df)
-
 }
