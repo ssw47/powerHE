@@ -18,35 +18,46 @@ powerHE(
 \itemize{
   \item Time to Event "TTE":
    \itemize{
-      \item tte.winning.direction: winning direction ("GT" or "LT")
-      \item er.a OR hr: probability of event in group A OR hazard ratio (group A relative to group B)
-      \item er.b: probability of event in group B
+      \item tte.winning.direction: winning direction. Input "GT" if longer time to event is a win or "LT" if shorter time to event is a win.
       \item s: follow-up time
+      \item input either:
+      \itemize{
+         \item er.a and er.b: where er.a is the probability of event in group A at the specified follow-up time and er.b is the probability of event in group B at the specified follow-up time.
+         \item hr and er.b: where hr is the hazard ratio (group A relative to group B) and er.b is the probability of event in group B at the specified follow-up time.
+      }
     }
   \item Continuous "Continuous":
    \itemize{
-      \item continuous.winning.direction: winning direction ("GT" or "LT")
-      \item mu.a OR mean.diff: mean in group A OR mean difference of group A minus group B
-      \item mu.b: mean in group B
+      \item continuous.winning.direction: winning direction. Input "GT" if larger value is a win or "LT" if smaller value is a win.
+.      \item input either:
+      \itemize{
+         \item mu.a and mu.b: where mu.a is the mean in group A and mu.b is the mean in group B.
+         \item mean.diff and mu.b: where mean.diff is the mean difference of group A minus group B and mu.b is the mean in group B.
+      }
       \item sd.a: standard deviation in group A
       \item sd.b: standard deviation in group B
-      \item delta: threshold to win
+      \item delta: threshold to win. If the winning direction is “GT,” group A wins over group B for a pair of subjects if the value from the subject in group A exceeds the value from the subject in group B by more than delta.
       }
   \item Binary (1/0) "Binary":
    \itemize{
-      \item binary.winning.direction: winning direction ("GT" or "LT")
-      \item pi.a OR prob.diff: Prob(Y=1) in group A OR Prob(Y=1) of group A minus group B
-      \item pi.b: Prob(Y=1) in group B
+      \item binary.winning.direction: winning direction. Input "GT" if 1 is a win or "LT" if a 0 is a win.
+      \item input either:
+      \itemize{
+         \item pi.a and pi.b: where pi.a is the Prob(Y=1) in group A and pi.b is the Prob(Y=1) in group B.
+         \item prob.diff and pi.b: where prob.diff is the Prob(Y=1) of group A minus group B and pi.b is the Prob(Y=1) in group B.
       }
+   }
   \item Count Endpoint (such as # of events) "Count":
    \itemize{
-      \item count.winning.direction: winning direction ("GT" or "LT")
-      \item lam.a OR rr: number of counts/events in group A OR relative rate of group A over group B
-      \item lam.b: number of counts/events in group B
+      \item count.winning.direction: winning direction. Input "GT" if a larger number of counts is a win or "LT" if a smaller number of counts is a win.
+      \itemize{
+         \item lam.a and lam.b: where lam.a is the number of counts/events in group A and lam.b is the number of counts/events in group B.
+         \item rr and lam.b: where rr is the relative rate of group A over group B and lam.b is the number of counts/events in group B.
       }
+   }
   \item Ordinal (1, 2, ..., J) "Ordinal":
    \itemize{
-      \item ordinal.winning.direction: winning direction ("GT" or "LT")
+      \item ordinal.winning.direction: winning direction. Input "GT" if higher level of category is a win or "LT" if lower level of category is a win.
       \item pi.ordinal.a: Prob(Y=1), ..., Prob(Y=J) in group A (comma-separated)
       \item pi.ordinal.b: Prob(Y=1), ..., Prob(Y=J) in group B (comma-separated)
       }
@@ -58,9 +69,16 @@ powerHE(
 
 \item{alpha}{Two-sided Type 1 Error}
 
-\item{rratio}{Randomization probability for Group A}
+\item{rratio}{Probability randomized to group A (As a result, 1 - rratio will be the probability randomized to group B).}
 
-\item{output}{Choose from: ALL, WR, WO, NB, DOOR}
+\item{output}{Specifies the output type. Options are:
+\itemize{
+  \item ALL (default): Displays all results based on all parameters
+  \item WR: Displays results related to win ratios
+  \item WO: Displays results related to win odds
+  \item NB: Displays results related to net benefits
+  \item DOOR: Displays results related to desirability of outcome ranking
+  }}
 }
 \description{
 This function can calculate sample size given power or vice versa based on
@@ -72,17 +90,32 @@ WR (win ratios), marginal and overall WO (win odds), marginal and overall NB
 If given power, the function can calculate sample size for WR, WO, NB, and
 DOOR. If given sample size, the function can calculate power for WR, WO, NB,
 and DOOR. It is suggested to assign the output to an object, which defaults
-to showing all the probabilities listed above. Examples are given below.
+to showing all the probabilities listed above.
+Examples are given below.
 }
 \examples{
-# Two continuous hierarchical endpoints:
-# The marginal distributions for Y1A and Y1B are normal distributions with
-# means 15 and 4, respectively, and standard deviations of 60. For Y2A and
-# Y2B, the marginal distributions are normal distributions with means 40 and
-# 30, respectively, and standard deviations of 24. For both endpoints, the
-# threshold to win is chosen to be the same, with both delta1 and delta2
-# equal to 5.
-# Find the required sample size to achieve a power of 0.85 for win ratios.
+# For all examples, A is the default for the active group and B is the
+# default for the control group.
+
+# Two continuous (type = "Continuous"):
+# For the first endpoint, the marginal distribution for the active group (A)
+# follows a normal distribution with a mean of 15 (mu.a = 15) and a standard
+# deviation of 60 (sd.a = 60), while the control group (B) also follows a
+# normal distribution with a mean of 4 (mu.b = 4) and a standard deviation of
+# 60 (sd.b = 60). The threshold to win is 5 (delta = 5) and a longer time to
+# event is better (continuous.winning.direction = “GT”).
+
+# For the second endpoint, the marginal distribution for the active group (A)
+# follows a normal distribution with a mean of 40 (mu.a = 40) and a standard
+# deviation of 24 (sd.a = 24), while the control group (B) also follows a
+# normal distribution with a mean of 30 (mu.b = 30) and a standard deviation
+# of 24 (sd.b = 24). The threshold to win is 5 (delta = 5) and a longer time
+# to event is better (continuous.winning.direction = “GT”).
+
+# We seek to find the required sample size to achieve a power of 0.85
+# (power = 0.85) for detecting an overall win ratio calculated based on the
+# inputted parameters of the marginal distributions with an alpha level of
+# 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
 
 endpoints_input <- list(
   list(type = "Continuous",
@@ -106,12 +139,23 @@ powerHE(endpoints_input,
     rratio = 0.5,
     output = "ALL")
 
-# Two binary hierarchical endpoints:
-# The marginal probabilities for Y1A and Y1B are binomial distributions with
-# a success probability of 0.90 and 0.85, respectively, for one trial. For
-# Y2A and Y2B, the marginal probabilities are binomial distributions with
-# success probabilities of 0.80 and 0.75, respectively, for one trial.
-# Find the achieved power for win ratios with a sample size of 1098.
+# Two binary (type = "Binary"):
+# For the first endpoint, the marginal distribution for the active group (A)
+# follows a binomial distribution with a success probability of 0.90
+# (pi.a = 0.9) for one trial, while the control group (B) also follows a
+# binomial distribution with a success probability of 0.85 (pi.b = 0.85) for
+# one trial. A 1 represents a win (binary.winning.direction = "GT").
+
+# For the second endpoint, the marginal distribution for the active group (A)
+# follows a binomial distribution with a success probability of 0.80
+# (pi.a = 0.8) for one trial, while the control group (B) also follows a
+# binomial distribution with a success probability of 0.75 (pi.b = 0.75) for
+# one trial. A 1 represents a win (binary.winning.direction = "GT").
+
+# We seek to find the achieved power for detecting an overall win ratio
+# calculated based on the inputted parameters of the marginal distributions
+# with a sample size of 1098 (sample.size = 1098) with an alpha level
+# of 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
 
 endpoints_input <- list(
   list(type = "Binary",
@@ -129,12 +173,24 @@ powerHE(endpoints_input,
     rratio = 0.5,
     output = "ALL")
 
-# Binary and continuous hierarchical endpoints:
-# The marginal probabilities for Y1A and Y1B are binomial distributions with
-# success probabilities of 0.96 and 0.95, respectively, for one trial. For
-# Y2A and Y2B, the marginal distributions are normal distributions with means
-# 36 and 31, respectively, and standard deviations of 24.
-# Find the required sample size to achieve a power of 0.85 for win ratios.
+# One binary (type = "Binary") and one continuous (type = "Continuous"):
+# For the first endpoint, the marginal distribution for the active group (A)
+# follows a binomial distribution with a success probability of 0.96
+# (pi.a = 0.96) for one trial, while the control group (B) also follows a
+# binomial distribution with a success probability of 0.95 (pi.b = 0.95). A 1
+# represents a win (binary.winning.direction = "GT").
+
+# For the second endpoint, the marginal distribution for the active group (A)
+# follows a normal distribution with a mean of 36 (mu.a = 36) and a standard
+# deviation of 24 (sd.a = 24), while the control group (B) also follows a
+# normal distribution with a mean of 31 (mu.b = 31) and a standard
+# deviation of 24 (sd.b = 24). The threshold to win is 5 (delta = 5) and a
+# longer time to event is better (continuous.winning.direction = “GT”).
+
+# We seek to find the required sample size to achieve a power of 0.85
+# (power = 0.85) for detecting an overall win ratio calculated based on the
+# inputted parameters of the marginal distributions with an alpha level of
+# 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
 
 endpoints_input <- list(
   list(type = "Binary",
@@ -155,20 +211,31 @@ powerHE(endpoints_input,
     rratio = 0.5,
     output = "ALL")
 
-# Time to death and number of hospitalizations as hierarchical endpoints:
-# The marginal distributions for Y1A and Y1B are exponential distributions
-# with rate parameters of 0.16 and 0.20, respectively. For Y2A, the marginal
-# distribution is a Poisson distribution with a mean of 0.75, and for Y2B, it
-# is a normal distribution with a mean of 1.1. The follow-up time for all
-# measurements is 5 years.
-# Find the achieved power for win ratios with a sample size of 770.
+# One TTE (type = "TTE") and one count (type = "Count"):
+# For the first endpoint, the marginal distribution for the active group (A)
+# follows an exponential distribution with a rate parameter of 0.16, while
+# the control group (B) also follows an exponential distribution with a rate
+# parameter of 0.20 (hr.a = 0.16 / 0.20 = 0.8). The follow-up time is 5 years
+# (s = 5, er.b = 1 - exp(-0.20 * 5) = 0.63212), and a longer time to event is
+# a win (tte.winning.direction = "GT").
+
+# For the second endpoint, the number of hospitalizations for the active
+# (A) follows a Poisson distribution with a mean of 0.75 (lam.a = 0.75),
+# while the number of hospitalization in the control group (B) also follows a
+# Poisson distribution with a mean of 1.1 (lam.b = 1.1). A smaller count is a
+# win (count.winning.direction = "GT").
+
+# We seek to find the achieved power for detecting an overall win ratio
+# calculated based on the inputted parameters of the marginal distributions
+# with a sample size of 770 (sample.size = 770) with an alpha level
+# of 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
 
 endpoints_input <- list(
   list(type = "TTE",
        tte.winning.direction = "GT",
-       s = 5,
        hr.a = 0.8,
-       er.b = 0.63212),
+       er.b = 0.63212,
+       s = 5,),
   list(type = "Count",
        count.winning.direction = "LT",
        lam.a = 0.75,
@@ -180,16 +247,31 @@ powerHE(endpoints_input,
     rratio = 0.5,
     output = "ALL")
 
-# Two ordinal hierarchical endpoints, each with 3 ordinal categories:
-# The marginal distributions for Y1A and Y1B are multinomial distributions
-# with probabilities for the three categories (1, 2, 3) given by
-# (0.45, 0.30, 0.25) for Y1A and (0.50, 0.30, 0.20) for Y1B. For Y2A and Y2B,
-# the marginal distributions are multinomial distributions with probabilities
-# (0.30, 0.30, 0.40) for Y2A and (0.40, 0.30, 0.30) for Y2B. The probabilities
-# represent the likelihood of a subject being in categories 1, 2, or 3. We
-# assume that a subject in a higher ordinal category wins over a subject in a
-# lower ordinal category.
-# Find the required sample size to achieve a power of 0.85 for win ratios.
+# Two ordinal (each with ordinal categories 1, 2, and 3) (type = "Ordinal"):
+# For the first endpoint, the marginal distribution for the active group (A)
+# follows a multinomial distribution with probabilities for the three
+# categories (1, 2, 3) given by (0.45, 0.30, 0.25) (pi.ordinal.a = c(0.45,
+# 0.3, 0.25)), where each of the probabilities represent the likelihood of a
+# subject being in categories 1, 2, or 3. The control group (B) also follows
+# a multinomial distribution with probabilities for the same three categories
+# given by (0.50, 0.30, 0.20) (pi.ordinal.b = c(0.5, 0.3, 0.2)). A subject in
+# a higher ordinal category wins over a subject in a lower ordinal category
+# (ordinal.winning.direction = “GT").
+
+# For the second endpoint, the marginal distribution for the active group (A)
+# follows a multinomial distribution with probabilities for the three
+# categories (1, 2, 3) given by (0.30, 0.30, 0.40) (pi.ordinal.a = c(0.3,
+# 0.3, 0.4)), where each of the probabilities represent the likelihood of a
+# subject being in categories 1, 2, or 3. The control group (B) also follows
+# a multinomial distribution with probabilities for the same three categories
+# given by (0.40, 0.30, 0.30) (pi.ordinal.b = c(0.4, 0.3, 0.3)). A subject in
+# a higher ordinal category wins over a subject in a lower ordinal category
+# (ordinal.winning.direction = “GT").
+
+# We seek to find the required sample size to achieve a power of 0.85
+# (power = 0.85) for detecting an overall win ratio calculated based on the
+# inputted parameters of the marginal distributions with an alpha level of
+# 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
 
 endpoints_input <- list(
   list(type = "Ordinal",
