@@ -1,7 +1,3 @@
-library(tidyverse)
-library(knitr)
-library(kableExtra)
-library(brio)
 library(skellam)
 
 #' @noRd

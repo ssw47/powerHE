@@ -2,4 +2,3 @@ export(powerHE)
 export(formatHE)
 importFrom("stats", "pnorm", "qnorm")
 importFrom("skellam", "pskellam.sp")
-
