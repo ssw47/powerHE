@@ -1,8 +1,8 @@
 Package: powerHE
 Type: Package
-Title: The R 'powerHE' Package
-Version: 0.1.0
-Author: Dylan Thibault and Sarah Wu
+Title: Power and Sample Size Calculations with Hierarchical Endpoints
+Version: 1.0.0
+Author: Sarah Wu [aut, cre], Dylan Thibault [aut]
 Maintainer: Sarah Wu <O2E@duke.edu>
 Description: Calculate sample size or power for hierarchical endpoints. 
   The package can handle any type of outcomes (binary, continuous, count, ordinal, 

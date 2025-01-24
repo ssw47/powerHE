@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.6.8)  15 NOV 2024 15:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.6.8)  23 JAN 2025 18:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -349,8 +349,8 @@ File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count290
 \l__pdf_internal_box=\box58
 )
-(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/RtmpEKT3Bd/Rd2pdf1503
-39114122/Rd2.aux)
+(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/Rtmp3w1Kcg/Rd2pdf1d74
+1227715c/Rd2.aux)
 \openout1 = `Rd2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
@@ -388,10 +388,10 @@ LaTeX Font Info:    ... okay on input line 8.
 )
 Package hyperref Info: Link coloring ON on input line 8.
 
-(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/RtmpEKT3Bd/Rd2pdf1503
-39114122/Rd2.out)
-(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/RtmpEKT3Bd/Rd2pdf1503
-39114122/Rd2.out)
+(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/Rtmp3w1Kcg/Rd2pdf1d74
+1227715c/Rd2.out)
+(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/Rtmp3w1Kcg/Rd2pdf1d74
+1227715c/Rd2.out)
 \@outlinefile=\write4
 \openout4 = `Rd2.out'.
 
@@ -410,8 +410,8 @@ File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
 (Font)              scaled to size 10.0pt on input line 21.
 
-(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/RtmpEKT3Bd/Rd2pdf1503
-39114122/Rd2.toc
+(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/Rtmp3w1Kcg/Rd2pdf1d74
+1227715c/Rd2.toc
 LaTeX Font Info:    Trying to load font information for U+msa on input line 1.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -429,45 +429,49 @@ File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 \tf@toc=\write5
 \openout5 = `Rd2.toc'.
 
-LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 9.0pt on input line 53.
  [1
 
 
 {/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/2023
-/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}] [2] [3]
+/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc}]
+LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
+(Font)              scaled to size 9.0pt on input line 55.
+ [2] [3] [4]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [4]
-(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/RtmpEKT3Bd/Rd2pdf1503
-39114122/Rd2.ind [5] [6
+ [5]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [6]
+(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/Rtmp3w1Kcg/Rd2pdf1d74
+1227715c/Rd2.ind [7] [8
 
 
 ])
-(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/RtmpEKT3Bd/Rd2pdf1503
-39114122/Rd2.aux)
+(/private/var/folders/cy/t4d6gtw96w144p5sn8g5f0ch0000gn/T/Rtmp3w1Kcg/Rd2pdf1d74
+1227715c/Rd2.aux)
 Package rerunfilecheck Info: File `Rd2.out' has not changed.
-(rerunfilecheck)             Checksum: EB95974EE72173068040A5D3CC503BC8;194.
+(rerunfilecheck)             Checksum: E91D993033452F683844670CFF0C42EC;236.
  ) 
 Here is how much of TeX's memory you used:
- 10332 strings out of 476025
- 160394 string characters out of 5790018
- 1864388 words of memory out of 5000000
- 30578 multiletter control sequences out of 15000+600000
+ 10335 strings out of 476025
+ 160450 string characters out of 5790018
+ 1865388 words of memory out of 5000000
+ 30579 multiletter control sequences out of 15000+600000
  546154 words of font info for 75 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 92i,5n,92p,296b,739s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 92i,5n,92p,307b,741s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/public/inconsolata/Inconsolat
 a-zi4r.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/c
 msy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
 </usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/loca
 l/texlive/2023/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/
 2023/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Rd2.pdf (6 pages, 80995 bytes).
+Output written on Rd2.pdf (8 pages, 93509 bytes).
 PDF statistics:
- 101 PDF objects out of 1000 (max. 8388607)
- 80 compressed objects within 1 object stream
- 22 named destinations out of 1000 (max. 500000)
+ 111 PDF objects out of 1000 (max. 8388607)
+ 88 compressed objects within 1 object stream
+ 24 named destinations out of 1000 (max. 500000)
  25 words of extra memory for PDF output out of 10000 (max. 10000000)
 
