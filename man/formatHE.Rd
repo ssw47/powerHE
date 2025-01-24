@@ -7,7 +7,7 @@
 formatHE(result)
 }
 \arguments{
-\item{result}{A list (powerHE returns a list).}
+\item{result}{A list (return object of powerHE).}
 }
 \description{
 This function formats the results outputted from the powerHE function. See below (pdf) or use ?powerHE (in R) to view its documentation.

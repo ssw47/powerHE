@@ -628,55 +628,58 @@ huiman.power.results <- function(results_in=NA,
 #' \itemize{
 #'   \item \bold{Time to Event (type = "TTE")}:
 #'    \itemize{
-#'       \item tte.winning.direction: winning direction. Input "GT" if longer time to event is a win or "LT" if shorter time to event is a win.
-#'       \item s: follow-up time.
+#'       \item tte.winning.direction: Winning direction. Input "GT" if longer time to event is a win or "LT" if shorter time to event is a win.
+#'       \item s: Follow-up time.
 #'       \item input \bold{either}:
 #'       \itemize{
-#'          \item er.a and er.b: where er.a is the probability of event in group A at the specified follow-up time and er.b is the probability of event in group B at the specified follow-up time.
-#'          \item hr and er.b: where hr is the hazard ratio (group A relative to group B) and er.b is the probability of event in group B at the specified follow-up time.
+#'          \item er.a and er.b: Where er.a is the probability of event in group A at the specified follow-up time and er.b is the probability of event in group B at the specified follow-up time.
+#'          \item hr and er.b: Where hr is the hazard ratio (group A relative to group B) and er.b is the probability of event in group B at the specified follow-up time.
 #'       }
 #'     }
 #'   \item \bold{Continuous (type = "Continuous")}:
 #'    \itemize{
-#'       \item continuous.winning.direction: winning direction. Input "GT" if larger value is a win or "LT" if smaller value is a win.
-#'.      \item input \bold{either}:
+#'       \item continuous.winning.direction: Winning direction. Input "GT" if larger value is a win or "LT" if smaller value is a win.
+#'       \item input \bold{either}:
 #'       \itemize{
-#'          \item mu.a and mu.b: where mu.a is the mean in group A and mu.b is the mean in group B.
-#'          \item mean.diff and mu.b: where mean.diff is the mean difference of group A minus group B and mu.b is the mean in group B.
+#'          \item mu.a and mu.b: Where mu.a is the mean in group A and mu.b is the mean in group B.
+#'          \item mean.diff and mu.b: Where mean.diff is the mean difference of group A minus group B and mu.b is the mean in group B.
 #'       }
-#'       \item sd.a: standard deviation in group A.
-#'       \item sd.b: standard deviation in group B.
-#'       \item delta: threshold to win. If the winning direction is “GT,” group A wins over group B for a pair of subjects if the value from the subject in group A exceeds the value from the subject in group B by more than delta.
+#'       \item sd.a: Standard deviation in group A.
+#'       \item sd.b: Standard deviation in group B.
+#'       \item delta: Threshold to win. If the winning direction is “GT,” group A wins over group B for a pair of subjects if the value from the subject in group A exceeds the value from the subject in group B by more than delta.
 #'       }
 #'   \item \bold{Binary (1/0) (type = "Binary")}:
 #'    \itemize{
-#'       \item binary.winning.direction: winning direction. Input "GT" if 1 is a win or "LT" if a 0 is a win.
+#'       \item binary.winning.direction: Winning direction. Input "GT" if 1 is a win or "LT" if a 0 is a win.
 #'       \item input \bold{either}:
 #'       \itemize{
-#'          \item pi.a and pi.b: where pi.a is the Prob(Y=1) in group A and pi.b is the Prob(Y=1) in group B.
-#'          \item prob.diff and pi.b: where prob.diff is the Prob(Y=1) of group A minus group B and pi.b is the Prob(Y=1) in group B.
+#'          \item pi.a and pi.b: Where pi.a is the Prob(Y=1) in group A and pi.b is the Prob(Y=1) in group B.
+#'          \item prob.diff and pi.b: Where prob.diff is the Prob(Y=1) of group A minus group B and pi.b is the Prob(Y=1) in group B.
 #'       }
 #'    }
 #'   \item \bold{Count (# of events) (type = "Count")}:
 #'    \itemize{
-#'       \item count.winning.direction: winning direction. Input "GT" if a larger number of counts is a win or "LT" if a smaller number of counts is a win.
+#'       \item count.winning.direction: Winning direction. Input "GT" if a larger number of counts is a win or "LT" if a smaller number of counts is a win.
 #'       \item input \bold{either}:
 #'       \itemize{
-#'          \item lam.a and lam.b: where lam.a is the number of counts/events in group A and lam.b is the number of counts/events in group B.
-#'          \item rr and lam.b: where rr is the relative rate of group A over group B and lam.b is the number of counts/events in group B.
+#'          \item lam.a and lam.b: Where lam.a is the number of counts/events in group A and lam.b is the number of counts/events in group B.
+#'          \item rr and lam.b: Where rr is the relative rate of group A over group B and lam.b is the number of counts/events in group B.
 #'       }
 #'    }
 #'   \item \bold{Ordinal (1, 2, ..., J) (type = "Ordinal")}:
 #'    \itemize{
-#'       \item ordinal.winning.direction: winning direction. Input "GT" if higher level of category is a win or "LT" if lower level of category is a win.
+#'       \item ordinal.winning.direction: Winning direction. Input "GT" if higher level of category is a win or "LT" if lower level of category is a win.
 #'       \item pi.ordinal.a: Prob(Y=1), ..., Prob(Y=J) in group A (comma-separated).
 #'       \item pi.ordinal.b: Prob(Y=1), ..., Prob(Y=J) in group B (comma-separated).
 #'       }
 #' }
-#' @param sample.size An integer (enter either sample.size or power).
-#' @param power 0 to 1 (enter either sample.size or power).
+#' @param sample.size An integer (enter \bold{either} sample.size or power).
+#' @param power A probability between 0 and 1 (enter \bold{either} sample.size or power).
 #' @param alpha Two-sided Type 1 Error.
-#' @param rratio Probability randomized to group A (As a result, 1 - rratio will be the probability randomized to group B).
+#' @param rratio Probability randomized to group A.
+#' \itemize{
+#'    \item As a result, 1 - rratio will be the probability randomized to group B.
+#'    }
 #' @param output Specifies the output type. Options are:
 #' \itemize{
 #'   \item \bold{ALL} (default): Displays all results based on all parameters.
@@ -691,7 +694,7 @@ huiman.power.results <- function(results_in=NA,
 #' # For all examples, A is the default for the active group and B is the
 #' # default for the control group.
 #'
-#' # Two continuous (type = "Continuous"):
+#' ### Two continuous (type = "Continuous"):
 #' # For the first endpoint, the marginal distribution for the active group (A)
 #' # follows a normal distribution with a mean of 15 (mu.a = 15) and a standard
 #' # deviation of 60 (sd.a = 60), while the control group (B) also follows a
@@ -733,7 +736,7 @@ huiman.power.results <- function(results_in=NA,
 #'     rratio = 0.5,
 #'     output = "ALL")
 #'
-#' # Two binary (type = "Binary"):
+#' ### Two binary (type = "Binary"):
 #' # For the first endpoint, the marginal distribution for the active group (A)
 #' # follows a binomial distribution with a success probability of 0.90
 #' # (pi.a = 0.9) for one trial, while the control group (B) also follows a
@@ -767,7 +770,7 @@ huiman.power.results <- function(results_in=NA,
 #'     rratio = 0.5,
 #'     output = "ALL")
 #'
-#' # One binary (type = "Binary") and one continuous (type = "Continuous"):
+#' ### One binary (type = "Binary") and one continuous (type = "Continuous"):
 #' # For the first endpoint, the marginal distribution for the active group (A)
 #' # follows a binomial distribution with a success probability of 0.96
 #' # (pi.a = 0.96) for one trial, while the control group (B) also follows a
@@ -805,7 +808,7 @@ huiman.power.results <- function(results_in=NA,
 #'     rratio = 0.5,
 #'     output = "ALL")
 #'
-#' # One TTE (type = "TTE") and one count (type = "Count"):
+#' ### One TTE (type = "TTE") and one count (type = "Count"):
 #' # For the first endpoint, the marginal distribution for the active group (A)
 #' # follows an exponential distribution with a rate parameter of 0.16, while
 #' # the control group (B) also follows an exponential distribution with a rate
@@ -841,7 +844,7 @@ huiman.power.results <- function(results_in=NA,
 #'     rratio = 0.5,
 #'     output = "ALL")
 #'
-#' # Two ordinal (each with ordinal categories 1, 2, and 3) (type = "Ordinal"):
+#' ### Two ordinal (each with ordinal categories 1, 2, and 3) (type = "Ordinal"):
 #' # For the first endpoint, the marginal distribution for the active group (A)
 #' # follows a multinomial distribution with probabilities for the three
 #' # categories (1, 2, 3) given by (0.45, 0.30, 0.25) (pi.ordinal.a = c(0.45,
@@ -961,7 +964,7 @@ powerHE <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05,
 #' Format powerHE Results
 #'
 #' This function formats the results outputted from the powerHE function. See below (pdf) or use ?powerHE (in R) to view its documentation.
-#' @param result A list (powerHE returns a list).
+#' @param result A list (return object of powerHE).
 #' @keywords formatHE
 #' @export
 #' @examples
