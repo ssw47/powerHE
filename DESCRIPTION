@@ -9,8 +9,7 @@ Authors@R: c(
          email = "O2E@duke.edu"),
   person(given = "Dylan",
          family = "Thibault",
-         role = "aut")
-)
+         role = "aut"))
 Description: Calculate sample size or power for hierarchical endpoints. 
   The package can handle any type of outcomes (binary, continuous, count, ordinal, 
   time-to-event) and any number of such endpoints. It allows users to calculate 
