@@ -1,0 +1,102 @@
+* using log directory ‘/Users/sarahwu/Downloads/powerHE/powerHE.Rcheck’
+* using R version 4.4.0 (2024-04-24)
+* using platform: aarch64-apple-darwin20
+* R was compiled by
+    Apple clang version 14.0.0 (clang-1400.0.29.202)
+    GNU Fortran (GCC) 12.2.0
+* running under: macOS 15.1.1
+* using session charset: UTF-8
+* using option ‘--as-cran’
+* checking for file ‘powerHE/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘powerHE’ version ‘1.0.0’
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... [4s/11s] NOTE
+Maintainer: ‘Sarah Wu <O2E@duke.edu>’
+
+New submission
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking serialization versions ... OK
+* checking whether package ‘powerHE’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking examples ... OK
+* checking PDF version of manual ... OK
+* checking HTML version of manual ... NOTE
+Found the following HTML validation problems:
+formatHE.html:15:44 (formatHE.Rd:5): Error: <main> is not recognized!
+formatHE.html:15:44 (formatHE.Rd:5): Warning: discarding unexpected <main>
+formatHE.html:62:1 (formatHE.Rd:30): Warning: discarding unexpected </main>
+formatHE.html:4:1 (formatHE.Rd:5): Warning: <link> inserting "type" attribute
+formatHE.html:12:1 (formatHE.Rd:5): Warning: <script> proprietary attribute "onload"
+formatHE.html:12:1 (formatHE.Rd:5): Warning: <script> inserting "type" attribute
+formatHE.html:17:1 (formatHE.Rd:5): Warning: <table> lacks "summary" attribute
+formatHE.html:35:1 (formatHE.Rd:10): Warning: <table> lacks "summary" attribute
+powerHE.html:15:44 (powerHE.Rd:5): Error: <main> is not recognized!
+powerHE.html:15:44 (powerHE.Rd:5): Warning: discarding unexpected <main>
+powerHE.html:108:69 (powerHE.Rd:39): Warning: replacing invalid character code 128
+powerHE.html:108:70 (powerHE.Rd:39): Warning: replacing invalid character code 156
+powerHE.html:108:75 (powerHE.Rd:39): Warning: replacing invalid character code 128
+powerHE.html:108:76 (powerHE.Rd:39): Warning: discarding invalid character code 157
+powerHE.html:229:52 (powerHE.Rd:110): Warning: replacing invalid character code 128
+powerHE.html:229:53 (powerHE.Rd:110): Warning: replacing invalid character code 156
+powerHE.html:229:57 (powerHE.Rd:110): Warning: replacing invalid character code 128
+powerHE.html:229:58 (powerHE.Rd:110): Warning: discarding invalid character code 157
+powerHE.html:236:55 (powerHE.Rd:117): Warning: replacing invalid character code 128
+powerHE.html:236:56 (powerHE.Rd:117): Warning: replacing invalid character code 156
+powerHE.html:236:60 (powerHE.Rd:117): Warning: replacing invalid character code 128
+powerHE.html:236:61 (powerHE.Rd:117): Warning: discarding invalid character code 157
+powerHE.html:311:67 (powerHE.Rd:192): Warning: replacing invalid character code 128
+powerHE.html:311:68 (powerHE.Rd:192): Warning: replacing invalid character code 156
+powerHE.html:311:72 (powerHE.Rd:192): Warning: replacing invalid character code 128
+powerHE.html:311:73 (powerHE.Rd:192): Warning: discarding invalid character code 157
+powerHE.html:382:33 (powerHE.Rd:263): Warning: replacing invalid character code 128
+powerHE.html:382:34 (powerHE.Rd:263): Warning: replacing invalid character code 156
+powerHE.html:392:33 (powerHE.Rd:273): Warning: replacing invalid character code 128
+powerHE.html:392:34 (powerHE.Rd:273): Warning: replacing invalid character code 156
+powerHE.html:416:1 (powerHE.Rd:294): Warning: discarding unexpected </main>
+powerHE.html:4:1 (powerHE.Rd:5): Warning: <link> inserting "type" attribute
+powerHE.html:12:1 (powerHE.Rd:5): Warning: <script> proprietary attribute "onload"
+powerHE.html:12:1 (powerHE.Rd:5): Warning: <script> inserting "type" attribute
+powerHE.html:17:1 (powerHE.Rd:5): Warning: <table> lacks "summary" attribute
+powerHE.html:52:1 (powerHE.Rd:17): Warning: <table> lacks "summary" attribute
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+Status: 2 NOTEs

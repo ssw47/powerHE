@@ -2,15 +2,7 @@ Package: powerHE
 Type: Package
 Title: Power and Sample Size Calculations with Hierarchical Endpoints
 Version: 1.0.0
-Authors@R: c(
-  person(given = "Sarah",
-         family = "Wu",
-         role = c("aut", "cre"),
-         email = "O2E@duke.edu"),
-  person(given = "Dylan",
-         family = "Thibault",
-         role = "aut")
-)
+Author: Sarah Wu [aut, cre], Dylan Thibault [aut]
 Maintainer: Sarah Wu <O2E@duke.edu>
 Description: Calculate sample size or power for hierarchical endpoints. 
   The package can handle any type of outcomes (binary, continuous, count, ordinal, 
@@ -23,3 +15,6 @@ License: GPL (>= 2)
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Imports: skellam
+NeedsCompilation: no
+Packaged: 2025-01-28 17:02:12 UTC; sarahwu
+Built: R 4.4.0; ; 2025-01-28 17:03:10 UTC; unix

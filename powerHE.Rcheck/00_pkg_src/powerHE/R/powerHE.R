@@ -1,0 +1,1035 @@
+library(skellam)
+
+#' @noRd
+dskellam <- function(x, lambda1, lambda2=lambda1, log=FALSE){
+  # density (PMF) of Skellam distriubition (difference of Poissons)
+  if (missing(x)|missing(lambda1)) stop("first 2 arguments are required")
+  lambdas <- c(lambda1,lambda2)
+  oops <- !(is.finite(lambdas)&(lambdas>=0))
+  if(any(oops)) {
+    warning("NaNs produced")
+    lambdas[oops] <- NaN
+    lambda1 <- lambdas[1:length(lambda1)]
+    lambda2 <- lambdas[(length(lambda1)+1):length(lambdas)]
+  }
+  # make all args the same length (for subsetting)
+  lens <- c(length(x),length(lambda1),length(lambda2))
+  len <- max(lens)
+  if(len>min(lens)) {
+    if (all(len/lens!=len%/%lens)) warning("longer object length is not a multiple of shorter object length", domain=NA)
+    x <- rep(x,length.out=len)
+    lambda1 <- rep(lambda1,length.out=len)
+    lambda2 <- rep(lambda2,length.out=len)
+  }
+  # warn of non-integer x values (since support of PMF is integers)
+  nonint <- x!=trunc(x)
+  if (any(nonint)) {
+    xreal <- x[nonint]
+    for (i in 1:length(xreal)) warning(paste("non-integer x =",xreal[i]))
+  }
+  x <- trunc(x)
+  ret <- rep(NaN,length.out=len)
+  # handle a zero lambda separately (avoids division by zero & accuracy issues for large values of lambda or x)
+  ret[lambda1==0] <- stats::dpois(-x[lambda1==0],lambda2[lambda1==0],log=log)
+  ret[lambda2==0] <- stats::dpois( x[lambda2==0],lambda1[lambda2==0],log=log)    # corrects bug in VGAM 0.7-9
+  # non-zero lambdas
+  nz <- is.finite(lambda1)&is.finite(lambda2)&(lambda1>0)&(lambda2>0)
+  L1 <- lambda1[nz];
+  L2 <- lambda2[nz];
+  sqL12 <- sqrt(L1*L2)
+  xx <- x[nz]
+  if (log[1]) {       # use abs(x) in besselI for improved accuracy (prior to 2.9) and S-PLUS compatibility
+    # log(besselI(y,nu)) == y+log(besselI(y,nu,TRUE))
+    ret[nz] <- log(besselI(2*sqL12, abs(xx),TRUE))+2*sqL12-L1-L2+xx/2*log(L1/L2)
+  } else {
+    # besselI(y,nu); exp(y)*besselI(y,nu,TRUE)
+    #       ret[nz] <- besselI(2*sqL12, abs(xx),TRUE)*(L1/L2)^(xx/2)*exp(2*sqL12-L1-L2)
+    ret[nz] <- besselI(2*sqL12, abs(xx),TRUE)*exp(2*sqL12-L1-L2+xx/2*log(L1/L2))
+  }
+  chk <- nz & (!is.finite(ret) | (!log)&(ret<1e-308)) # use saddlepoint approximation to detect possible over/underflow
+  if (length(chk[chk])>0) {
+    L1 <- lambda1[chk];
+    L2 <- lambda2[chk];
+    sqL12 <- sqrt(L1*L2)
+    xx <- x[chk]
+    s <- log(0.5*(xx+sqrt(xx^2+4*L1*L2))/L1)# the saddlepoint
+    K <- L1*(exp(s)-1)+L2*(exp(-s)-1)       # CGF(s)
+    K2 <- L1*exp(s)+L2*exp(-s)              # CGF''(s)
+    spd <- exp(K-xx*s)/sqrt(2*pi*K2)         # saddlepoint density, was x in place of xx
+    usp <- (spd>1e-308)&is.finite(spd)      # don't trust the existing result
+    if (length(usp[usp])>0) {   # add another term to the saddlepoint approximation
+      su <- s[usp]
+      K2u <- K2[usp]
+      c <- (1-((L1[usp]*exp(su)-L2[usp]*exp(-su))/K2u)^2*5/3)/K2u*0.125+1
+      ret[chk][usp] <- exp(K[usp]-x[usp]*su)/sqrt(2*pi*K2u)*(1+c)*0.5
+    }
+  }
+  ret
+}
+
+#' @noRd
+pskellam <- function(q, lambda1, lambda2=lambda1, lower.tail=TRUE, log.p=FALSE){
+  # CDF of Skellam distriubition (difference of Poissons)
+  if (missing(q)|missing(lambda1)) stop("first 2 arguments are required")
+  lambdas <- c(lambda1,lambda2)
+  oops <- !(is.finite(lambdas)&(lambdas>=0))
+  if(any(oops)) {
+    warning("NaNs produced")
+    lambdas[oops] <- NaN
+    lambda1 <- lambdas[1:length(lambda1)]
+    lambda2 <- lambdas[(length(lambda1)+1):length(lambdas)]
+  }
+  # CDF is a step function, so convert to integer values without warning
+  x <- floor(q)
+  # make all args the same length (for subsetting)
+  lens <- c(length(x),length(lambda1),length(lambda2))
+  len <- max(lens)
+  if(len>min(lens)) {
+    if (all(len/lens!=len%/%lens)) warning("longer object length is not a multiple of shorter object length", domain=NA)
+    x <- rep(x,length.out=len)
+    lambda1 <- rep(lambda1,length.out=len)
+    lambda2 <- rep(lambda2,length.out=len)
+  }
+  # different formulas for negative & nonnegative x (zero lambda is OK)
+  neg <- (x< 0)&(!is.nan(lambda1))&(!is.nan(lambda2))
+  pos <- (x>=0)&(!is.nan(lambda1))&(!is.nan(lambda2))
+  ret <- rep(NaN,length.out=len)
+  if (lower.tail[1]) {
+    ret[neg] <- stats::pchisq(2*lambda2[neg],-2*x[neg],2*lambda1[neg],log.p=log.p)
+    ret[pos] <- stats::pchisq(2*lambda1[pos],2*(x[pos]+1),2*lambda2[pos],lower.tail=FALSE,log.p=log.p)     # S-PLUS does not have a lower.tail argument
+  } else {
+    ret[neg] <- stats::pchisq(2*lambda2[neg],-2*x[neg],2*lambda1[neg],lower.tail=FALSE,log.p=log.p)        # S-PLUS does not have a lower.tail argument
+    ret[pos] <- stats::pchisq(2*lambda1[pos],2*(x[pos]+1),2*lambda2[pos],log.p=log.p)
+  }
+  chk <- (neg|pos) & (!is.finite(ret) | (!log.p)&(ret<1e-308))    # use saddlepoint approximation if outside the working range of pchisq
+  if (length(chk[chk])>0) ret[chk] <- pskellam.sp(x[chk],lambda1[chk],lambda2[chk],lower.tail,log.p)
+  ret
+}
+
+#' @noRd
+huiman.power.fun1 <- function(endpoint=NA, mu.a=NA, mean.diff=NA, mu.b=NA, sd.a=NA, sd.b=NA, delta=NA,
+                              pi.a=NA, prob.diff=NA, pi.b=NA,
+                              er.a=NA, hr=NA, er.b=NA, s=NA,
+                              lam.a=NA, rr=NA, lam.b=NA,
+                              pi.ordinal.a=NA, pi.ordinal.b=NA,
+                              tte.winning.direction=NA,
+                              continuous.winning.direction=NA,
+                              binary.winning.direction=NA,
+                              count.winning.direction=NA,
+                              ordinal.winning.direction=NA) {
+
+  # Convert endpoint-specific parameters if not provided based on other inputs
+  if(endpoint == "TTE") {
+    if(is.null(hr)) hr <- NA
+    if(is.null(er.a)) er.a <- NA
+  }
+
+  if(endpoint == "Binary") {
+    if(is.null(prob.diff)) prob.diff <- NA
+    if(is.null(pi.a)) pi.a <- NA
+  }
+
+  if(endpoint == "Continuous") {
+    if(is.null(mean.diff)) mean.diff <- NA
+    if(is.null(mu.a)) mu.a <- NA
+  }
+
+  if(endpoint == "Count") {
+    if(is.null(rr)) rr <- NA
+    if(is.null(lam.a)) lam.a <- NA
+  }
+
+  # Initialize combined result vectors
+  p_win <- p_lose <- p_tie <- wr <- nb <- wo <- door <- numeric(0)
+
+  # Store the results for each endpoint type separately
+  results_list <- list()
+
+  # TTE part
+  if (endpoint=="TTE") {
+
+    # Check if either er.a or hr is provided, not both, along with er.b
+    if((!is.na(hr) && !is.na(er.a)) || (is.na(hr) && is.na(er.a)) || is.na(er.b)) {
+      stop("For TTE: Must enter exactly one of 'er.a' or 'hr', and must provide 'er.b'.")
+    }
+
+    # Additional checks for required fields
+    if(is.null(s) || is.null(tte.winning.direction)) {
+      stop("For TTE: 's' and 'tte.winning.direction' must be provided.")
+    }
+
+    p_win.tte <- p_lose.tte <- p_tie.tte <- NA
+    wr.tte <- wo.tte <- nb.tte <- door.tte <- NA
+    hr.a <- hr.b <- NA
+
+    if (!is.na(hr) && is.na(er.a)) {
+      hr.b <- -log(1-er.b)/s
+      hr.a <- hr*hr.b
+    }
+
+    if (!is.na(er.a) && is.na(hr)) {
+      hr.a <- -log(1-er.a)/s
+      hr.b <- -log(1-er.b)/s
+    }
+
+    if (tte.winning.direction=="GT") {
+      p_win.tte <- hr.b/(hr.a+hr.b)*(1-exp(-(hr.a+hr.b)*s))
+      p_lose.tte <- hr.a/(hr.a+hr.b)*(1-exp(-(hr.a+hr.b)*s))
+    }
+
+    if (tte.winning.direction=="LT") {
+      p_win.tte <- hr.a/(hr.a+hr.b)*(1-exp(-(hr.a+hr.b)*s))
+      p_lose.tte <- hr.b/(hr.a+hr.b)*(1-exp(-(hr.a+hr.b)*s))
+    }
+
+    p_tie.tte <- 1 - p_win.tte - p_lose.tte
+    wr.tte <- p_win.tte / p_lose.tte
+    nb.tte <- p_win.tte - p_lose.tte
+    wo.tte <- (p_win.tte + 0.5 * p_tie.tte) / (p_lose.tte + 0.5 * p_tie.tte)
+    door.tte <- p_win.tte + 0.5 * p_tie.tte
+
+
+    # Store TTE results
+    results_list <- list(p_win = p_win.tte, p_lose = p_lose.tte, p_tie = p_tie.tte,
+                         wr = wr.tte, nb = nb.tte, wo = wo.tte, door = door.tte)
+
+    return(results_list)
+
+  }
+
+  # Binary part
+  if (endpoint=="Binary") {
+
+    # Check if either pi.a or prob.diff is provided, not both, along with pi.b
+    if((!is.na(prob.diff) && !is.na(pi.a)) || (is.na(prob.diff) && is.na(pi.a)) || is.na(pi.b)) {
+      stop("For Continuous: Must enter exactly one of 'pi.a' or 'prob.diff', and must provide 'pi.b'.")
+    }
+
+    # Additional checks for required fields
+    if(is.null(binary.winning.direction)) {
+      stop("For Binary: 'binary.winning.direction' must be provided.")
+    }
+
+    if (!is.na(prob.diff) && is.na(pi.a)) {
+      pi.a <- prob.diff + pi.b
+    }
+
+    p_win.bin <- p_lose.bin <- p_tie.bin <- NA
+    wr.bin <- wo.bin <- nb.bin <- door.bin <- NA
+
+    if (binary.winning.direction=="LT") {
+      p_win.bin <- (1-pi.a)*pi.b
+      p_lose.bin <- (1-pi.b)*pi.a
+    }
+
+    if (binary.winning.direction=="GT") {
+      p_win.bin <- (1-pi.b)*pi.a
+      p_lose.bin <- (1-pi.a)*pi.b
+    }
+
+
+    p_tie.bin <- 1 - p_win.bin - p_lose.bin
+    wr.bin <- p_win.bin / p_lose.bin
+    nb.bin <- p_win.bin - p_lose.bin
+    wo.bin <- (p_win.bin + 0.5 * p_tie.bin) / (p_lose.bin + 0.5 * p_tie.bin)
+    door.bin <- p_win.bin + 0.5 * p_tie.bin
+
+
+    # Store Binary results
+    results_list <- list(p_win = p_win.bin, p_lose = p_lose.bin, p_tie = p_tie.bin,
+                         wr = wr.bin, nb = nb.bin, wo = wo.bin, door = door.bin)
+    return(results_list)
+  }
+
+  # Ordinal part
+  if (endpoint=="Ordinal") {
+
+    # Check if either pi.a or prob.diff is provided, not both, along with pi.b
+    if (length(pi.ordinal.b) != length(pi.ordinal.a)) {
+      stop("You must enter 'Prob(Y=1), ..., Prob(Y=J) in group A' along with 'Prob(Y=1), ..., Prob(Y=J) in group B'")
+    }
+
+    # Additional checks for required fields
+    if(is.null(ordinal.winning.direction)) {
+      stop("For Ordinal: 'ordinal.winning.direction' must be provided.")
+    }
+
+    p_win.ordinal <- p_lose.ordinal <- 0
+
+    J <- length(pi.ordinal.a) # Number of categories in the i-th endpoint
+
+    if (ordinal.winning.direction=="GT") {
+      for (i in 1:(J-1)) {
+        sum_a <- sum(pi.ordinal.a[(i + 1):J]) # Sum of pi.ordinal.a from (i+1) to J
+        sum_b <- sum(pi.ordinal.b[(i + 1):J]) # Sum of pi.ordinal.b from (i+1) to J
+
+        p_win.ordinal <- p_win.ordinal + sum_a * pi.ordinal.b[i]
+        p_lose.ordinal <- p_lose.ordinal + sum_b * pi.ordinal.a[i]
+      }
+    }
+
+    if (ordinal.winning.direction=="LT") {
+      for (i in 2:J) {
+        sum_a <- sum(pi.ordinal.a[1:(i - 1)]) # Sum of pi.ordinal.a up to the (i-1)th element
+        sum_b <- sum(pi.ordinal.b[1:(i - 1)]) # Sum of pi.ordinal.b up to the (i-1)th element
+
+        p_win.ordinal <- p_win.ordinal + sum_a * pi.ordinal.b[i]
+        p_lose.ordinal <- p_lose.ordinal + sum_b * pi.ordinal.a[i]
+      }
+    }
+
+    p_tie.ordinal <- wr.ordinal <- wo.ordinal <- nb.ordinal <- door.ordinal <- NA
+
+    p_tie.ordinal <- 1 - p_win.ordinal - p_lose.ordinal
+    wr.ordinal <- p_win.ordinal / p_lose.ordinal
+    nb.ordinal <- p_win.ordinal - p_lose.ordinal
+    wo.ordinal <- (p_win.ordinal + 0.5 * p_tie.ordinal) / (p_lose.ordinal + 0.5 * p_tie.ordinal)
+    door.ordinal <- p_win.ordinal + 0.5 * p_tie.ordinal
+
+
+    # Store Ordinal results
+    results_list <- list(p_win = p_win.ordinal, p_lose = p_lose.ordinal, p_tie = p_tie.ordinal,
+                         wr = wr.ordinal, nb = nb.ordinal, wo = wo.ordinal, door = door.ordinal)
+
+    return(results_list)
+
+  }
+
+  # Count part
+  if (endpoint=="Count") {
+
+    # Check if either lam.a or rr is provided, not both, along with lam.b
+    if((!is.na(rr) && !is.na(lam.a)) || (is.na(rr) && is.na(lam.a)) || is.na(lam.b)) {
+      stop("For Count: Must enter exactly one of 'lam.a' or 'rr', and must provide 'lam.b'.")
+    }
+
+    # Additional checks for required fields
+    if(is.null(count.winning.direction)) {
+      stop("For Count: 'count.winning.direction' must be provided.")
+    }
+
+    if (!is.na(rr) && is.na(lam.a)) {
+      lam.a <- rr * lam.b
+    }
+
+    p_win.count <- p_lose.count <- p_tie.count <- NA
+    wr.count <- wo.count <- nb.count <- door.count <- NA
+
+    if (count.winning.direction=="LT") {
+      p_win.count <- pskellam(0, lam.a, lam.b)-dskellam(0,lam.a, lam.b)
+      p_lose.count <- 1-pskellam(0, lam.a, lam.b)
+    }
+
+    if (count.winning.direction=="GT") {
+      p_win.count <- 1-pskellam(0, lam.a, lam.b)
+      p_lose.count <- pskellam(0, lam.a, lam.b)-dskellam(0,lam.a, lam.b)
+    }
+
+    p_tie.count <- 1 - p_win.count - p_lose.count
+    wr.count <- p_win.count / p_lose.count
+    nb.count <- p_win.count - p_lose.count
+    wo.count <- (p_win.count + 0.5 * p_tie.count) / (p_lose.count + 0.5 * p_tie.count)
+    door.count <- p_win.count + 0.5 * p_tie.count
+
+    # Store Count results
+    results_list <- list(p_win = p_win.count, p_lose = p_lose.count, p_tie = p_tie.count,
+                         wr = wr.count, nb = nb.count, wo = wo.count, door = door.count)
+
+    return(results_list)
+
+  }
+
+  # Continuous part
+  if (endpoint=="Continuous") {
+
+    # Check if either mu.a or mean.diff is provided, not both, along with mu.b
+    if((!is.na(mean.diff) && !is.na(mu.a)) || (is.na(mean.diff) && is.na(mu.a)) || is.na(mu.b)) {
+      stop("For Binary: Must enter exactly one of 'mu.a' or 'mean.diff', and must provide 'mu.b'.")
+    }
+
+    # Additional checks for required fields
+    if(is.null(sd.a) || is.null(sd.b) || is.null(delta) || is.null(continuous.winning.direction)) {
+      stop("For Continuous: 'sd.a', 'sd.b', 'delta', and 'continuous.winning.direction' must be provided.")
+    }
+
+    if (!is.na(mean.diff) && is.na(mu.a)) {
+      mu.a <- mean.diff + mu.b
+    }
+
+    p_win.cont <- p_lose.cont <- p_tie.cont <- NA
+    wr.cont <- wo.cont <- nb.cont <- door.cont <- NA
+
+    if (continuous.winning.direction=="GT") {
+      p_win.cont <- pnorm((mu.a - mu.b - delta) / (sqrt(sd.a^2 + sd.b^2)))
+      p_lose.cont <- pnorm((mu.b - mu.a - delta) / (sqrt(sd.a^2 + sd.b^2)))
+    }
+
+    if (continuous.winning.direction=="LT") {
+      p_win.cont <- pnorm((mu.b - mu.a - delta) / (sqrt(sd.a^2 + sd.b^2)))
+      p_lose.cont <- pnorm((mu.a - mu.b - delta) / (sqrt(sd.a^2 + sd.b^2)))
+    }
+
+    p_tie.cont <- 1 - p_win.cont - p_lose.cont
+    wr.cont <- p_win.cont / p_lose.cont
+    nb.cont <- p_win.cont - p_lose.cont
+    wo.cont <- (p_win.cont + 0.5 * p_tie.cont) / (p_lose.cont + 0.5 * p_tie.cont)
+    door.cont <- p_win.cont + 0.5 * p_tie.cont
+
+    # Store Continuous results
+    results_list <- list(p_win = p_win.cont, p_lose = p_lose.cont, p_tie = p_tie.cont,
+                         wr = wr.cont, nb = nb.cont, wo = wo.cont, door = door.cont)
+
+    return(results_list)
+
+  }
+
+
+}
+
+#' @noRd
+huiman.power.results <- function(results_in=NA,
+                                 sample.size=NA, power=NA,
+                                 alpha=0.05, rratio=0.5, output = "ALL") {
+
+  p_win <- results_in$p_win
+  p_lose <- results_in$p_lose
+  p_tie <- results_in$p_tie
+  wr <- results_in$wr
+  nb <- results_in$nb
+  wo <- results_in$wo
+  door <- results_in$door
+
+  # total endpoints
+  k <- length(p_win) # Number of endpoints
+
+  term <- rep(NA, k)
+
+  # Calculating each term
+  term[1] <- p_lose[1] # First term is just p_lose[1]
+  # Only execute the loop if k > 1
+  if (k > 1) {
+    for (i in 2:k) {
+      term[i] <- prod(p_tie[1:(i-1)]) * p_lose[i]
+    }
+  }
+
+  allterm <- sum(term)
+
+  # Calculate p_tie_overall
+  p_tie_overall <- prod(p_tie)
+
+  # Calculate w vector
+  #### output this weight for WR output
+  w <- term / allterm
+
+  # for win odds
+  # term for k + 1
+  term_final <- 0.5*p_tie_overall
+
+  wo.allterm <- allterm + term_final
+
+  ep <- term / wo.allterm
+
+  #ep for k + 1
+  ep_final <- term_final / wo.allterm
+
+  #win odds weights marginal win ratio k
+  ep_k <- term/(allterm + 0.5*p_tie_overall)
+
+  # Aggregate calculations for overall values
+  wr_c <- sum(wr * w)
+  wo_c <- sum(wr * ep) + ep_final
+
+  #### output this weight for WO output
+  wo_weights <- wr * (ep_k / (wo))
+  wo_weights <- c(wo_weights, ep_final)
+
+  #settting NB and DOOR to 0 before iteration
+  nb_c <- 0
+  door_c <- 0
+  for (i in 1:k) {
+    # Calculate nb_c iteratively
+    if (i == 1) {
+      nb_c <- nb[i]
+    } else {
+      nb_c <- nb_c + nb[i] * prod(p_tie[1:(i-1)])
+    }
+
+    # Calculate door_c iteratively
+    if (i == 1) {
+      door_c <- door[i]
+    } else {
+      door_c <- door_c + (door[i] - 0.5) * prod(p_tie[1:(i-1)])
+    }
+  }
+
+  #### output this weight for NB and DOOR output
+  #NB and DOOR weights
+  nb_door_weight <- rep(NA, k)
+
+  for (i in 1:k) {
+    if (i == 1) {
+      nb_door_weight[i] <- 1
+    } else {
+      nb_door_weight[i] <- prod(p_tie[1:(i-1)])
+    }
+  }
+
+  nb_c_a = (wo_c-1)/(wo_c+1)
+  door_c_a = wo_c/(1+wo_c)
+
+  # Calculate the powers
+  if (!is.na(sample.size)) {
+    power_c.WR = 1-pnorm(qnorm(1-alpha/2) - abs(log(wr_c))*sqrt(3*sample.size*(1-p_tie_overall)/(16*(1+p_tie_overall))))
+
+    power_c.WO <- 1-pnorm(qnorm(1-alpha/2) - abs(log(wo_c))*sqrt(3*sample.size/(16*(1+p_tie_overall)*(1-p_tie_overall))))
+
+    power_c.NB <- 1-pnorm(qnorm(1-alpha/2) - abs(nb_c)*sqrt(3*sample.size/(4*(1+p_tie_overall)*(1-p_tie_overall))))
+
+    power_c.DOOR <- 1-pnorm(qnorm(1-alpha/2) - abs((door_c-0.5))*sqrt(3*sample.size/((1+p_tie_overall)*(1-p_tie_overall))))
+
+  }
+
+  #calculate the sample size
+  if (!is.na(power)) {
+    n.wr <- round(4*(1+p_tie_overall)*(qnorm(1-alpha/2)+qnorm(power))^2/(3*rratio*(1-rratio)*(1-p_tie_overall)*(log(wr_c))^2))
+
+    n.wo <- round(4*(1+p_tie_overall)*(1-p_tie_overall)*(qnorm(1-alpha/2)+qnorm(power))^2/(3*rratio*(1-rratio)*(log(wo_c))^2))
+
+    n.nb <- round((1+p_tie_overall)*(1-p_tie_overall)*(qnorm(1-alpha/2)+qnorm(power))^2 / (3*rratio*(1-rratio)*(nb_c^2)))
+
+    n.door <- round((1+p_tie_overall)*(1-p_tie_overall)*(qnorm(1-alpha/2)+qnorm(power))^2 / (12*rratio*(1-rratio)*(door_c-0.5)^2))
+
+  }
+
+  # Return results
+
+  # Conditional return based on output argument
+  if (output == "ALL") {
+    if (!is.na(sample.size)) {
+      return(list(p_tie = p_tie,
+                  p_tie_overall = p_tie_overall,
+
+                  wr = wr, wr_c = wr_c,
+                  wo = wo, wo_c = wo_c,
+                  nb = nb, nb_c = nb_c,
+
+                  door = door, door_c = door_c,
+
+                  power_c.WR = power_c.WR,
+                  power_c.WO = power_c.WO,
+                  power_c.NB = power_c.NB,
+                  power_c.DOOR = power_c.DOOR))
+    }
+    if (!is.na(power)) {
+      return(list(p_tie = p_tie,
+                  p_tie_overall = p_tie_overall,
+
+                  wr = wr, wr_c = wr_c,
+                  wo = wo, wo_c = wo_c,
+                  nb = nb, nb_c = nb_c,
+
+                  door = door, door_c = door_c,
+
+
+                  n.wr = n.wr, n.wo = n.wo,
+                  n.nb = n.nb, n.door = n.door))
+    }
+  }
+
+  if (output == "WR") {
+    if (!is.na(sample.size)) {
+      return(list(p_tie = p_tie,
+                  p_tie_overall = p_tie_overall,
+                  w = w,
+                  wr = wr, wr_c = wr_c,
+                  power_c.WR = power_c.WR))
+    }
+    if (!is.na(power)) {
+      return(list(p_tie = p_tie,
+                  p_tie_overall = p_tie_overall,
+                  w = w,
+                  wr = wr, wr_c = wr_c,
+                  n.wr = n.wr))
+    }
+  }
+
+  if (output == "WO") {
+    if (!is.na(sample.size)) {
+      return(list(p_tie = p_tie,
+                  p_tie_overall = p_tie_overall,
+                  wo_weights = wo_weights,
+                  wo = wo, wo_c = wo_c,
+                  power_c.WO = power_c.WO))
+    }
+    if (!is.na(power)) {
+      return(list(p_tie = p_tie,
+                  p_tie_overall = p_tie_overall,
+                  wo_weights = wo_weights,
+                  wo = wo, wo_c = wo_c,
+                  n.wo = n.wo))
+    }
+  }
+
+  if (output == "NB") {
+    if (!is.na(sample.size)) {
+      return(list(p_tie = p_tie,
+                  p_tie_overall = p_tie_overall,
+                  nb_door_weight = nb_door_weight,
+                  nb = nb, nb_c = nb_c,
+                  power_c.NB = power_c.NB))
+    }
+    if (!is.na(power)) {
+      return(list(p_tie = p_tie,
+                  p_tie_overall = p_tie_overall,
+                  nb_door_weight = nb_door_weight,
+                  nb = nb, nb_c = nb_c,
+                  n.nb = n.nb))
+    }
+  }
+
+  if (output == "DOOR") {
+    if (!is.na(sample.size)) {
+      return(list(p_tie = p_tie,
+                  p_tie_overall = p_tie_overall,
+                  nb_door_weight = nb_door_weight,
+                  door = door, door_c = door_c,
+                  power_c.DOOR = power_c.DOOR))
+    }
+    if (!is.na(power)) {
+      return(list(p_tie = p_tie,
+                  p_tie_overall = p_tie_overall,
+                  nb_door_weight = nb_door_weight,
+                  door = door, door_c = door_c,
+                  n.door = n.door))
+    }
+  }
+
+}
+
+#' Hierarchical Endpoints
+#'
+#' This function can calculate sample size given power or vice versa based on
+#' inputs which represent the marginals of each endpoint. The function assumes
+#' that the correlation between endpoints are 0, and it can output the following
+#' probabilities: marginal and overall probability of ties, marginal and overall
+#' WR (win ratios), marginal and overall WO (win odds), marginal and overall NB
+#' (net benefits), marginal and overall DOOR (desirability of outcome ranking).
+#' If given power, the function can calculate sample size for WR, WO, NB, and
+#' DOOR. If given sample size, the function can calculate power for WR, WO, NB,
+#' and DOOR. It is suggested to assign the output to an object, which defaults
+#' to showing all the probabilities listed above.
+#' Examples are given below.
+#' @param endpoints_input A list with each endpoint being a nested list.
+#' \itemize{
+#'   \item \bold{Time to Event (type = "TTE")}:
+#'    \itemize{
+#'       \item tte.winning.direction: Winning direction. Input "GT" if longer time to event is a win or "LT" if shorter time to event is a win.
+#'       \item s: Follow-up time.
+#'       \item input \bold{either}:
+#'       \itemize{
+#'          \item er.a and er.b: Where er.a is the probability of event in group A at the specified follow-up time and er.b is the probability of event in group B at the specified follow-up time.
+#'          \item hr and er.b: Where hr is the hazard ratio (group A relative to group B) and er.b is the probability of event in group B at the specified follow-up time.
+#'       }
+#'     }
+#'   \item \bold{Continuous (type = "Continuous")}:
+#'    \itemize{
+#'       \item continuous.winning.direction: Winning direction. Input "GT" if larger value is a win or "LT" if smaller value is a win.
+#'       \item input \bold{either}:
+#'       \itemize{
+#'          \item mu.a and mu.b: Where mu.a is the mean in group A and mu.b is the mean in group B.
+#'          \item mean.diff and mu.b: Where mean.diff is the mean difference of group A minus group B and mu.b is the mean in group B.
+#'       }
+#'       \item sd.a: Standard deviation in group A.
+#'       \item sd.b: Standard deviation in group B.
+#'       \item delta: Threshold to win. If the winning direction is “GT,” group A wins over group B for a pair of subjects if the value from the subject in group A exceeds the value from the subject in group B by more than delta.
+#'       }
+#'   \item \bold{Binary (1/0) (type = "Binary")}:
+#'    \itemize{
+#'       \item binary.winning.direction: Winning direction. Input "GT" if 1 is a win or "LT" if a 0 is a win.
+#'       \item input \bold{either}:
+#'       \itemize{
+#'          \item pi.a and pi.b: Where pi.a is the Prob(Y=1) in group A and pi.b is the Prob(Y=1) in group B.
+#'          \item prob.diff and pi.b: Where prob.diff is the Prob(Y=1) of group A minus group B and pi.b is the Prob(Y=1) in group B.
+#'       }
+#'    }
+#'   \item \bold{Count (# of events) (type = "Count")}:
+#'    \itemize{
+#'       \item count.winning.direction: Winning direction. Input "GT" if a larger number of counts is a win or "LT" if a smaller number of counts is a win.
+#'       \item input \bold{either}:
+#'       \itemize{
+#'          \item lam.a and lam.b: Where lam.a is the number of counts/events in group A and lam.b is the number of counts/events in group B.
+#'          \item rr and lam.b: Where rr is the relative rate of group A over group B and lam.b is the number of counts/events in group B.
+#'       }
+#'    }
+#'   \item \bold{Ordinal (1, 2, ..., J) (type = "Ordinal")}:
+#'    \itemize{
+#'       \item ordinal.winning.direction: Winning direction. Input "GT" if higher level of category is a win or "LT" if lower level of category is a win.
+#'       \item pi.ordinal.a: Prob(Y=1), ..., Prob(Y=J) in group A (comma-separated).
+#'       \item pi.ordinal.b: Prob(Y=1), ..., Prob(Y=J) in group B (comma-separated).
+#'       }
+#' }
+#' @param sample.size An integer (enter \bold{either} sample.size or power).
+#' @param power A probability between 0 and 1 (enter \bold{either} sample.size or power).
+#' @param alpha Two-sided Type 1 Error.
+#' @param rratio Probability randomized to group A.
+#' \itemize{
+#'    \item As a result, 1 - rratio will be the probability randomized to group B.
+#'    }
+#' @param output Specifies the output type. Options are:
+#' \itemize{
+#'   \item \bold{ALL} (default): Displays all results based on all parameters.
+#'   \item \bold{WR}: Displays results related to win ratios.
+#'   \item \bold{WO}: Displays results related to win odds.
+#'   \item \bold{NB}: Displays results related to net benefits.
+#'   \item \bold{DOOR}: Displays results related to desirability of outcome ranking.
+#'   }
+#' @keywords endpoints
+#' @export
+#' @examples
+#' # For all examples, A is the default for the active group and B is the
+#' # default for the control group.
+#'
+#' ### Two continuous (type = "Continuous"):
+#' # For the first endpoint, the marginal distribution for the active group (A)
+#' # follows a normal distribution with a mean of 15 (mu.a = 15) and a standard
+#' # deviation of 60 (sd.a = 60), while the control group (B) also follows a
+#' # normal distribution with a mean of 4 (mu.b = 4) and a standard deviation of
+#' # 60 (sd.b = 60). The threshold to win is 5 (delta = 5) and a longer time to
+#' # event is better (continuous.winning.direction = “GT”).
+#'
+#' # For the second endpoint, the marginal distribution for the active group (A)
+#' # follows a normal distribution with a mean of 40 (mu.a = 40) and a standard
+#' # deviation of 24 (sd.a = 24), while the control group (B) also follows a
+#' # normal distribution with a mean of 30 (mu.b = 30) and a standard deviation
+#' # of 24 (sd.b = 24). The threshold to win is 5 (delta = 5) and a longer time
+#' # to event is better (continuous.winning.direction = “GT”).
+#'
+#' # We seek to find the required sample size to achieve a power of 0.85
+#' # (power = 0.85) for detecting an overall win ratio calculated based on the
+#' # inputted parameters of the marginal distributions with an alpha level of
+#' # 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
+#'
+#' endpoints_input <- list(
+#'   list(type = "Continuous",
+#'        mu.a = 15,
+#'        mu.b = 4,
+#'        sd.a = 60,
+#'        sd.b = 60,
+#'        delta = 5,
+#'        continuous.winning.direction = "GT"),
+#'   list(type = "Continuous",
+#'        mu.a = 40,
+#'        mu.b = 30,
+#'        sd.a = 24,
+#'        sd.b = 24,
+#'        delta = 5,
+#'        continuous.winning.direction = "GT")
+#' )
+#' powerHE(endpoints_input,
+#'     power = 0.85,
+#'     alpha = 0.05,
+#'     rratio = 0.5,
+#'     output = "ALL")
+#'
+#' ### Two binary (type = "Binary"):
+#' # For the first endpoint, the marginal distribution for the active group (A)
+#' # follows a binomial distribution with a success probability of 0.90
+#' # (pi.a = 0.9) for one trial, while the control group (B) also follows a
+#' # binomial distribution with a success probability of 0.85 (pi.b = 0.85) for
+#' # one trial. A 1 represents a win (binary.winning.direction = "GT").
+#'
+#' # For the second endpoint, the marginal distribution for the active group (A)
+#' # follows a binomial distribution with a success probability of 0.80
+#' # (pi.a = 0.8) for one trial, while the control group (B) also follows a
+#' # binomial distribution with a success probability of 0.75 (pi.b = 0.75) for
+#' # one trial. A 1 represents a win (binary.winning.direction = "GT").
+#'
+#' # We seek to find the achieved power for detecting an overall win ratio
+#' # calculated based on the inputted parameters of the marginal distributions
+#' # with a sample size of 1098 (sample.size = 1098) with an alpha level
+#' # of 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
+#'
+#' endpoints_input <- list(
+#'   list(type = "Binary",
+#'       pi.a = 0.9,
+#'       pi.b = 0.85,
+#'       binary.winning.direction = "GT"),
+#'   list(type = "Binary",
+#'       pi.a = 0.8,
+#'       pi.b = 0.75,
+#'       binary.winning.direction = "GT")
+#' )
+#' powerHE(endpoints_input,
+#'     sample.size = 1098,
+#'     alpha = 0.05,
+#'     rratio = 0.5,
+#'     output = "ALL")
+#'
+#' ### One binary (type = "Binary") and one continuous (type = "Continuous"):
+#' # For the first endpoint, the marginal distribution for the active group (A)
+#' # follows a binomial distribution with a success probability of 0.96
+#' # (pi.a = 0.96) for one trial, while the control group (B) also follows a
+#' # binomial distribution with a success probability of 0.95 (pi.b = 0.95). A 1
+#' # represents a win (binary.winning.direction = "GT").
+#'
+#' # For the second endpoint, the marginal distribution for the active group (A)
+#' # follows a normal distribution with a mean of 36 (mu.a = 36) and a standard
+#' # deviation of 24 (sd.a = 24), while the control group (B) also follows a
+#' # normal distribution with a mean of 31 (mu.b = 31) and a standard
+#' # deviation of 24 (sd.b = 24). The threshold to win is 5 (delta = 5) and a
+#' # longer time to event is better (continuous.winning.direction = “GT”).
+#'
+#' # We seek to find the required sample size to achieve a power of 0.85
+#' # (power = 0.85) for detecting an overall win ratio calculated based on the
+#' # inputted parameters of the marginal distributions with an alpha level of
+#' # 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
+#'
+#' endpoints_input <- list(
+#'   list(type = "Binary",
+#'        pi.a = 0.96,
+#'        pi.b = 0.95,
+#'        binary.winning.direction = "GT"),
+#'   list(type = "Continuous",
+#'        mu.a = 36,
+#'        mu.b = 31,
+#'        sd.a = 24,
+#'        sd.b = 24,
+#'        delta = 5,
+#'        continuous.winning.direction = "GT")
+#' )
+#' powerHE(endpoints_input,
+#'     power = 0.85,
+#'     alpha = 0.05,
+#'     rratio = 0.5,
+#'     output = "ALL")
+#'
+#' ### One TTE (type = "TTE") and one count (type = "Count"):
+#' # For the first endpoint, the marginal distribution for the active group (A)
+#' # follows an exponential distribution with a rate parameter of 0.16, while
+#' # the control group (B) also follows an exponential distribution with a rate
+#' # parameter of 0.20 (hr.a = 0.16 / 0.20 = 0.8). The follow-up time is 5 years
+#' # (s = 5, er.b = 1 - exp(-0.20 * 5) = 0.63212), and a longer time to event is
+#' # a win (tte.winning.direction = "GT").
+#'
+#' # For the second endpoint, the number of hospitalizations for the active
+#' # (A) follows a Poisson distribution with a mean of 0.75 (lam.a = 0.75),
+#' # while the number of hospitalization in the control group (B) also follows a
+#' # Poisson distribution with a mean of 1.1 (lam.b = 1.1). A smaller count is a
+#' # win (count.winning.direction = "GT").
+#'
+#' # We seek to find the achieved power for detecting an overall win ratio
+#' # calculated based on the inputted parameters of the marginal distributions
+#' # with a sample size of 770 (sample.size = 770) with an alpha level
+#' # of 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
+#'
+#' endpoints_input <- list(
+#'   list(type = "TTE",
+#'        tte.winning.direction = "GT",
+#'        hr.a = 0.8,
+#'        er.b = 0.63212,
+#'        s = 5),
+#'   list(type = "Count",
+#'        count.winning.direction = "LT",
+#'        lam.a = 0.75,
+#'        lam.b = 1.1)
+#' )
+#' powerHE(endpoints_input,
+#'     sample.size = 770,
+#'     alpha = 0.05,
+#'     rratio = 0.5,
+#'     output = "ALL")
+#'
+#' ### Two ordinal (each with ordinal categories 1, 2, and 3) (type = "Ordinal"):
+#' # For the first endpoint, the marginal distribution for the active group (A)
+#' # follows a multinomial distribution with probabilities for the three
+#' # categories (1, 2, 3) given by (0.45, 0.30, 0.25) (pi.ordinal.a = c(0.45,
+#' # 0.3, 0.25)), where each of the probabilities represent the likelihood of a
+#' # subject being in categories 1, 2, or 3. The control group (B) also follows
+#' # a multinomial distribution with probabilities for the same three categories
+#' # given by (0.50, 0.30, 0.20) (pi.ordinal.b = c(0.5, 0.3, 0.2)). A subject in
+#' # a higher ordinal category wins over a subject in a lower ordinal category
+#' # (ordinal.winning.direction = “GT").
+#'
+#' # For the second endpoint, the marginal distribution for the active group (A)
+#' # follows a multinomial distribution with probabilities for the three
+#' # categories (1, 2, 3) given by (0.30, 0.30, 0.40) (pi.ordinal.a = c(0.3,
+#' # 0.3, 0.4)), where each of the probabilities represent the likelihood of a
+#' # subject being in categories 1, 2, or 3. The control group (B) also follows
+#' # a multinomial distribution with probabilities for the same three categories
+#' # given by (0.40, 0.30, 0.30) (pi.ordinal.b = c(0.4, 0.3, 0.3)). A subject in
+#' # a higher ordinal category wins over a subject in a lower ordinal category
+#' # (ordinal.winning.direction = “GT").
+#'
+#' # We seek to find the required sample size to achieve a power of 0.85
+#' # (power = 0.85) for detecting an overall win ratio calculated based on the
+#' # inputted parameters of the marginal distributions with an alpha level of
+#' # 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
+#'
+#' endpoints_input <- list(
+#'   list(type = "Ordinal",
+#'        pi.ordinal.a = c(0.45, 0.3, 0.25),
+#'        pi.ordinal.b = c(0.5, 0.3, 0.2),
+#'        ordinal.winning.direction = "GT"),
+#'   list(type = "Ordinal",
+#'        pi.ordinal.a = c(0.3, 0.3, 0.4),
+#'        pi.ordinal.b = c(0.4, 0.3, 0.3),
+#'        ordinal.winning.direction = "GT")
+#' )
+#' powerHE(endpoints_input,
+#'     power = 0.85,
+#'     alpha = 0.05,
+#'     rratio = 0.5,
+#'     output = "ALL")
+powerHE <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05, rratio = 0.5, output = "ALL") {
+
+  # Check if power or sample_size is provided
+  if (is.na(power) && is.na(sample.size)) {
+    stop("Either power or sample.size must be provided.")
+  }
+
+  # Check for valid output argument
+  valid_outputs <- c("ALL", "WR", "WO", "NB", "DOOR")
+  if (!(output %in% valid_outputs)) {
+    stop("Invalid output type. Choose from: ALL, WR, WO, NB, DOOR")
+  }
+
+  # Initialize vectors to store combined results
+  combined_results <- list(p_win = numeric(0), p_lose = numeric(0), p_tie = numeric(0),
+                           wr = numeric(0), nb = numeric(0), wo = numeric(0), door = numeric(0))
+
+  # Iterate through each endpoint in the list
+  for (endpoint_data in endpoints_input) {
+    # Process each endpoint
+    result <- huiman.power.fun1(
+      endpoint = endpoint_data$type,
+      mu.a = endpoint_data$mu.a,
+      mean.diff = endpoint_data$mean.diff,
+      mu.b = endpoint_data$mu.b,
+      sd.a = endpoint_data$sd.a,
+      sd.b = endpoint_data$sd.b,
+      delta = endpoint_data$delta,
+      pi.a = endpoint_data$pi.a,
+      prob.diff = endpoint_data$prob.diff,
+      pi.b = endpoint_data$pi.b,
+      er.a = endpoint_data$er.a,
+      hr = endpoint_data$hr,
+      er.b = endpoint_data$er.b,
+      s = endpoint_data$s,
+      lam.a = endpoint_data$lam.a,
+      rr = endpoint_data$rr,
+      lam.b = endpoint_data$lam.b,
+      pi.ordinal.a = endpoint_data$pi.ordinal.a,
+      pi.ordinal.b = endpoint_data$pi.ordinal.b,
+      tte.winning.direction = endpoint_data$tte.winning.direction,
+      continuous.winning.direction = endpoint_data$continuous.winning.direction,
+      binary.winning.direction = endpoint_data$binary.winning.direction,
+      count.winning.direction = endpoint_data$count.winning.direction,
+      ordinal.winning.direction = endpoint_data$ordinal.winning.direction
+    )
+
+    # Check if there was an error
+    if (is.null(result)) {
+      stop("Missing output, please check input parameters")
+    }
+
+    # Append the results of this endpoint to the combined results
+    combined_results$p_win <- c(combined_results$p_win, result$p_win)
+    combined_results$p_lose <- c(combined_results$p_lose, result$p_lose)
+    combined_results$p_tie <- c(combined_results$p_tie, result$p_tie)
+    combined_results$wr <- c(combined_results$wr, result$wr)
+    combined_results$nb <- c(combined_results$nb, result$nb)
+    combined_results$wo <- c(combined_results$wo, result$wo)
+    combined_results$door <- c(combined_results$door, result$door)
+  }
+
+  # Now, calculate overall results using the combined results
+  final_results <- huiman.power.results(
+    results_in = combined_results,
+    sample.size = sample.size,
+    power = power,
+    alpha = alpha,
+    rratio = rratio,
+    output = output
+  )
+
+  return(final_results)
+}
+
+# Define a function to format the results
+#' Format powerHE Results
+#'
+#' This function formats the results outputted from the powerHE function. See below (pdf) or use ?powerHE (in R) to view its documentation.
+#' @param result A list (return object of powerHE).
+#' @keywords formatHE
+#' @export
+#' @examples
+#' # Example TTE endpoint with formatting:
+#'
+#' endpoints_input <- list(
+#'   list(type = "TTE",
+#'        hr = 0.8,
+#'        er.b = 0.25,
+#'        s = 12,
+#'        tte.winning.direction = "GT")
+#' )
+#' results <- powerHE(endpoints_input,
+#'                sample.size = 100,
+#'                alpha = 0.05,
+#'                rratio = 0.5,
+#'                output = "ALL")
+#' formatHE(results)
+formatHE <- function(result) {
+  # Initialize vectors for labels and values
+  labels <- c()
+  values <- c()
+
+  # Iterate through each result and assign label and value
+  for (name in names(result)) {
+    value <- result[[name]]
+    # Round numeric values to 3 decimal places or convert numeric arrays to comma-separated strings
+    if (is.numeric(value)) {
+      if (length(value) > 1) {  # More than one element
+        value <- paste(round(value, 3), collapse=", ")
+      } else {  # Single numeric value
+        value <- round(value, 3)
+      }
+    }
+
+    # Determine the label based on the name of the result
+    label <- switch(name,
+                    p_tie = "Marginal probability of ties",
+                    p_tie_overall = "Overall probability of ties",
+                    wr = "Marginal win ratios",
+                    wr_c = "Overall win ratios",
+                    w = "Win ratios weights",
+                    wo = "Marginal win odds",
+                    wo_c = "Overall win odds",
+                    wo_weights = "Win odds weights",
+                    nb = "Marginal net benefits",
+                    nb_c = "Overall net benefits",
+                    nb_c_a = "Alternative overall net benefits",
+                    door = "Marginal DOORs",
+                    door_c = "Overall DOORs",
+                    door_c_a = "Alternative overall DOORs",
+                    nb_door_weight = "Weights for NB and DOOR",
+                    power_c.WR = "Power for win ratios",
+                    power_c.WO = "Power for win odds",
+                    power_c.NB = "Power for net benefits",
+                    power_c.DOOR = "Power for DOORs",
+                    n.wr = "Sample size for win ratios",
+                    n.wo = "Sample size for win odds",
+                    n.nb = "Sample size for net benefits",
+                    n.door = "Sample size for DOORs",
+                    name)  # Default to name if not mapped
+
+    # Append the label and value to the vectors
+    labels <- c(labels, label)
+    values <- c(values, as.character(value))  # Ensure value is character for consistency
+  }
+
+  # Combine labels and values into a data frame
+  res_df <- data.frame(Label = labels, Value = values, stringsAsFactors = FALSE)
+
+  return(res_df)
+}

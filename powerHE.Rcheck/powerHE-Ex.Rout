@@ -1,0 +1,525 @@
+
+R version 4.4.0 (2024-04-24) -- "Puppy Cup"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "powerHE"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> base::assign(".ExTimings", "powerHE-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+> 
+> ### * </HEADER>
+> library('powerHE')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("formatHE")
+> ### * formatHE
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: formatHE
+> ### Title: Format powerHE Results
+> ### Aliases: formatHE
+> ### Keywords: formatHE
+> 
+> ### ** Examples
+> 
+> # Example TTE endpoint with formatting:
+> 
+> endpoints_input <- list(
++   list(type = "TTE",
++        hr = 0.8,
++        er.b = 0.25,
++        s = 12,
++        tte.winning.direction = "GT")
++ )
+> results <- powerHE(endpoints_input,
++                sample.size = 100,
++                alpha = 0.05,
++                rratio = 0.5,
++                output = "ALL")
+> formatHE(results)
+                          Label Value
+1  Marginal probability of ties 0.596
+2   Overall probability of ties 0.596
+3           Marginal win ratios  1.25
+4            Overall win ratios  1.25
+5             Marginal win odds 1.094
+6              Overall win odds 1.094
+7         Marginal net benefits 0.045
+8          Overall net benefits 0.045
+9                Marginal DOORs 0.522
+10                Overall DOORs 0.522
+11         Power for win ratios  0.07
+12           Power for win odds  0.07
+13       Power for net benefits  0.07
+14              Power for DOORs  0.07
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("formatHE", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("powerHE")
+> ### * powerHE
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: powerHE
+> ### Title: Hierarchical Endpoints
+> ### Aliases: powerHE
+> ### Keywords: endpoints
+> 
+> ### ** Examples
+> 
+> # For all examples, A is the default for the active group and B is the
+> # default for the control group.
+> 
+> ### Two continuous (type = "Continuous"):
+> # For the first endpoint, the marginal distribution for the active group (A)
+> # follows a normal distribution with a mean of 15 (mu.a = 15) and a standard
+> # deviation of 60 (sd.a = 60), while the control group (B) also follows a
+> # normal distribution with a mean of 4 (mu.b = 4) and a standard deviation of
+> # 60 (sd.b = 60). The threshold to win is 5 (delta = 5) and a longer time to
+> # event is better (continuous.winning.direction = “GT”).
+> 
+> # For the second endpoint, the marginal distribution for the active group (A)
+> # follows a normal distribution with a mean of 40 (mu.a = 40) and a standard
+> # deviation of 24 (sd.a = 24), while the control group (B) also follows a
+> # normal distribution with a mean of 30 (mu.b = 30) and a standard deviation
+> # of 24 (sd.b = 24). The threshold to win is 5 (delta = 5) and a longer time
+> # to event is better (continuous.winning.direction = “GT”).
+> 
+> # We seek to find the required sample size to achieve a power of 0.85
+> # (power = 0.85) for detecting an overall win ratio calculated based on the
+> # inputted parameters of the marginal distributions with an alpha level of
+> # 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
+> 
+> endpoints_input <- list(
++   list(type = "Continuous",
++        mu.a = 15,
++        mu.b = 4,
++        sd.a = 60,
++        sd.b = 60,
++        delta = 5,
++        continuous.winning.direction = "GT"),
++   list(type = "Continuous",
++        mu.a = 40,
++        mu.b = 30,
++        sd.a = 24,
++        sd.b = 24,
++        delta = 5,
++        continuous.winning.direction = "GT")
++ )
+> powerHE(endpoints_input,
++     power = 0.85,
++     alpha = 0.05,
++     rratio = 0.5,
++     output = "ALL")
+$p_tie
+[1] 0.04659588 0.11217644
+
+$p_tie_overall
+[1] 0.00522696
+
+$wr
+[1] 1.242153 1.696374
+
+$wr_c
+[1] 1.257971
+
+$wo
+[1] 1.229575 1.595017
+
+$wo_c
+[1] 1.25645
+
+$nb
+[1] 0.1029679 0.2292922
+
+$nb_c
+[1] 0.1136519
+
+$door
+[1] 0.5514839 0.6146461
+
+$door_c
+[1] 0.556826
+
+$n.wr
+[1] 919
+
+$n.wo
+[1] 919
+
+$n.nb
+[1] 927
+
+$n.door
+[1] 927
+
+> 
+> ### Two binary (type = "Binary"):
+> # For the first endpoint, the marginal distribution for the active group (A)
+> # follows a binomial distribution with a success probability of 0.90
+> # (pi.a = 0.9) for one trial, while the control group (B) also follows a
+> # binomial distribution with a success probability of 0.85 (pi.b = 0.85) for
+> # one trial. A 1 represents a win (binary.winning.direction = "GT").
+> 
+> # For the second endpoint, the marginal distribution for the active group (A)
+> # follows a binomial distribution with a success probability of 0.80
+> # (pi.a = 0.8) for one trial, while the control group (B) also follows a
+> # binomial distribution with a success probability of 0.75 (pi.b = 0.75) for
+> # one trial. A 1 represents a win (binary.winning.direction = "GT").
+> 
+> # We seek to find the achieved power for detecting an overall win ratio
+> # calculated based on the inputted parameters of the marginal distributions
+> # with a sample size of 1098 (sample.size = 1098) with an alpha level
+> # of 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
+> 
+> endpoints_input <- list(
++   list(type = "Binary",
++       pi.a = 0.9,
++       pi.b = 0.85,
++       binary.winning.direction = "GT"),
++   list(type = "Binary",
++       pi.a = 0.8,
++       pi.b = 0.75,
++       binary.winning.direction = "GT")
++ )
+> powerHE(endpoints_input,
++     sample.size = 1098,
++     alpha = 0.05,
++     rratio = 0.5,
++     output = "ALL")
+$p_tie
+[1] 0.78 0.65
+
+$p_tie_overall
+[1] 0.507
+
+$wr
+[1] 1.588235 1.333333
+
+$wr_c
+[1] 1.440594
+
+$wo
+[1] 1.105263 1.105263
+
+$wo_c
+[1] 1.19539
+
+$nb
+[1] 0.05 0.05
+
+$nb_c
+[1] 0.089
+
+$door
+[1] 0.525 0.525
+
+$door_c
+[1] 0.5445
+
+$power_c.WR
+[1] 0.8498845
+
+$power_c.WO
+[1] 0.8439836
+
+$power_c.NB
+[1] 0.8420948
+
+$power_c.DOOR
+[1] 0.8420948
+
+> 
+> ### One binary (type = "Binary") and one continuous (type = "Continuous"):
+> # For the first endpoint, the marginal distribution for the active group (A)
+> # follows a binomial distribution with a success probability of 0.96
+> # (pi.a = 0.96) for one trial, while the control group (B) also follows a
+> # binomial distribution with a success probability of 0.95 (pi.b = 0.95). A 1
+> # represents a win (binary.winning.direction = "GT").
+> 
+> # For the second endpoint, the marginal distribution for the active group (A)
+> # follows a normal distribution with a mean of 36 (mu.a = 36) and a standard
+> # deviation of 24 (sd.a = 24), while the control group (B) also follows a
+> # normal distribution with a mean of 31 (mu.b = 31) and a standard
+> # deviation of 24 (sd.b = 24). The threshold to win is 5 (delta = 5) and a
+> # longer time to event is better (continuous.winning.direction = “GT”).
+> 
+> # We seek to find the required sample size to achieve a power of 0.85
+> # (power = 0.85) for detecting an overall win ratio calculated based on the
+> # inputted parameters of the marginal distributions with an alpha level of
+> # 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
+> 
+> endpoints_input <- list(
++   list(type = "Binary",
++        pi.a = 0.96,
++        pi.b = 0.95,
++        binary.winning.direction = "GT"),
++   list(type = "Continuous",
++        mu.a = 36,
++        mu.b = 31,
++        sd.a = 24,
++        sd.b = 24,
++        delta = 5,
++        continuous.winning.direction = "GT")
++ )
+> powerHE(endpoints_input,
++     power = 0.85,
++     alpha = 0.05,
++     rratio = 0.5,
++     output = "ALL")
+$p_tie
+[1] 0.9140000 0.1158609
+
+$p_tie_overall
+[1] 0.1058969
+
+$wr
+[1] 1.263158 1.301612
+
+$wr_c
+[1] 1.297856
+
+$wo
+[1] 1.020202 1.262087
+
+$wo_c
+[1] 1.26218
+
+$nb
+[1] 0.0100000 0.1158609
+
+$nb_c
+[1] 0.1158969
+
+$door
+[1] 0.5050000 0.5579304
+
+$door_c
+[1] 0.5579484
+
+$n.wr
+[1] 871
+
+$n.wo
+[1] 873
+
+$n.nb
+[1] 881
+
+$n.door
+[1] 881
+
+> 
+> ### One TTE (type = "TTE") and one count (type = "Count"):
+> # For the first endpoint, the marginal distribution for the active group (A)
+> # follows an exponential distribution with a rate parameter of 0.16, while
+> # the control group (B) also follows an exponential distribution with a rate
+> # parameter of 0.20 (hr.a = 0.16 / 0.20 = 0.8). The follow-up time is 5 years
+> # (s = 5, er.b = 1 - exp(-0.20 * 5) = 0.63212), and a longer time to event is
+> # a win (tte.winning.direction = "GT").
+> 
+> # For the second endpoint, the number of hospitalizations for the active
+> # (A) follows a Poisson distribution with a mean of 0.75 (lam.a = 0.75),
+> # while the number of hospitalization in the control group (B) also follows a
+> # Poisson distribution with a mean of 1.1 (lam.b = 1.1). A smaller count is a
+> # win (count.winning.direction = "GT").
+> 
+> # We seek to find the achieved power for detecting an overall win ratio
+> # calculated based on the inputted parameters of the marginal distributions
+> # with a sample size of 770 (sample.size = 770) with an alpha level
+> # of 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
+> 
+> endpoints_input <- list(
++   list(type = "TTE",
++        tte.winning.direction = "GT",
++        hr.a = 0.8,
++        er.b = 0.63212,
++        s = 5),
++   list(type = "Count",
++        count.winning.direction = "LT",
++        lam.a = 0.75,
++        lam.b = 1.1)
++ )
+> powerHE(endpoints_input,
++     sample.size = 770,
++     alpha = 0.05,
++     rratio = 0.5,
++     output = "ALL")
+$p_tie
+[1] 0.1652993 0.3162960
+
+$p_tie_overall
+[1] 0.05228352
+
+$wr
+[1] 1.250000 1.758779
+
+$wr_c
+[1] 1.300596
+
+$wo
+[1] 1.204451 1.463197
+
+$wo_c
+[1] 1.282658
+
+$nb
+[1] 0.09274452 0.18804699
+
+$nb_c
+[1] 0.1238286
+
+$door
+[1] 0.5463723 0.5940235
+
+$door_c
+[1] 0.5619143
+
+$power_c.WR
+[1] 0.8501314
+
+$power_c.WO
+[1] 0.8497207
+
+$power_c.NB
+[1] 0.8461036
+
+$power_c.DOOR
+[1] 0.8461036
+
+> 
+> ### Two ordinal (each with ordinal categories 1, 2, and 3) (type = "Ordinal"):
+> # For the first endpoint, the marginal distribution for the active group (A)
+> # follows a multinomial distribution with probabilities for the three
+> # categories (1, 2, 3) given by (0.45, 0.30, 0.25) (pi.ordinal.a = c(0.45,
+> # 0.3, 0.25)), where each of the probabilities represent the likelihood of a
+> # subject being in categories 1, 2, or 3. The control group (B) also follows
+> # a multinomial distribution with probabilities for the same three categories
+> # given by (0.50, 0.30, 0.20) (pi.ordinal.b = c(0.5, 0.3, 0.2)). A subject in
+> # a higher ordinal category wins over a subject in a lower ordinal category
+> # (ordinal.winning.direction = “GT").
+> 
+> # For the second endpoint, the marginal distribution for the active group (A)
+> # follows a multinomial distribution with probabilities for the three
+> # categories (1, 2, 3) given by (0.30, 0.30, 0.40) (pi.ordinal.a = c(0.3,
+> # 0.3, 0.4)), where each of the probabilities represent the likelihood of a
+> # subject being in categories 1, 2, or 3. The control group (B) also follows
+> # a multinomial distribution with probabilities for the same three categories
+> # given by (0.40, 0.30, 0.30) (pi.ordinal.b = c(0.4, 0.3, 0.3)). A subject in
+> # a higher ordinal category wins over a subject in a lower ordinal category
+> # (ordinal.winning.direction = “GT").
+> 
+> # We seek to find the required sample size to achieve a power of 0.85
+> # (power = 0.85) for detecting an overall win ratio calculated based on the
+> # inputted parameters of the marginal distributions with an alpha level of
+> # 0.05 (alpha = 0.05) and a 1:1 randomization ratio (rratio = 0.5).
+> 
+> endpoints_input <- list(
++   list(type = "Ordinal",
++        pi.ordinal.a = c(0.45, 0.3, 0.25),
++        pi.ordinal.b = c(0.5, 0.3, 0.2),
++        ordinal.winning.direction = "GT"),
++   list(type = "Ordinal",
++        pi.ordinal.a = c(0.3, 0.3, 0.4),
++        pi.ordinal.b = c(0.4, 0.3, 0.3),
++        ordinal.winning.direction = "GT")
++ )
+> powerHE(endpoints_input,
++     power = 0.85,
++     alpha = 0.05,
++     rratio = 0.5,
++     output = "ALL")
+$p_tie
+[1] 0.365 0.330
+
+$p_tie_overall
+[1] 0.12045
+
+$wr
+[1] 1.228070 1.481481
+
+$wr_c
+[1] 1.293182
+
+$wo
+[1] 1.139037 1.298851
+
+$wo_c
+[1] 1.253394
+
+$nb
+[1] 0.065 0.130
+
+$nb_c
+[1] 0.11245
+
+$door
+[1] 0.5325 0.5650
+
+$door_c
+[1] 0.556225
+
+$n.wr
+[1] 923
+
+$n.wo
+[1] 925
+
+$n.nb
+[1] 933
+
+$n.door
+[1] 933
+
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("powerHE", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  0.106 0.008 0.118 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')
