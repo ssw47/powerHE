@@ -684,6 +684,7 @@ huiman.power.results <- function(results_in=NA,
 #'   \item \bold{NB}: Displays results related to net benefits.
 #'   \item \bold{DOOR}: Displays results related to desirability of outcome ranking.
 #'   }
+#' @returns A named list of results based on the specified 'output' parameter.
 #' @keywords endpoints
 #' @export
 #' @examples
@@ -962,6 +963,7 @@ powerHE <- function(endpoints_input, sample.size = NA, power = NA, alpha = 0.05,
 #' This function formats the results outputted from the powerHE function. See below (pdf) or use ?powerHE (in R) to view its documentation.
 #' @param result A list (return object of powerHE).
 #' @keywords formatHE
+#' @return A data frame containing the information from parameter 'result' with columns "Label" and "Value".
 #' @export
 #' @examples
 #' # Example TTE endpoint with formatting:
