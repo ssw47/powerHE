@@ -21,4 +21,3 @@ Description: Calculate sample size or power for hierarchical endpoints.
 License: GPL (>= 2)
 Encoding: UTF-8
 RoxygenNote: 7.3.2
-Imports: skellam

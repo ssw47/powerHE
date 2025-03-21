@@ -1,5 +1,3 @@
-library(skellam)
-
 #' @noRd
 dskellam <- function(x, lambda1, lambda2=lambda1, log=FALSE){
   # density (PMF) of Skellam distriubition (difference of Poissons)
@@ -104,6 +102,29 @@ pskellam <- function(q, lambda1, lambda2=lambda1, lower.tail=TRUE, log.p=FALSE){
   chk <- (neg|pos) & (!is.finite(ret) | (!log.p)&(ret<1e-308))    # use saddlepoint approximation if outside the working range of pchisq
   if (length(chk[chk])>0) ret[chk] <- pskellam.sp(x[chk],lambda1[chk],lambda2[chk],lower.tail,log.p)
   ret
+}
+
+#' @noRd
+pskellam.sp <- function(q, lambda1, lambda2=lambda1, lower.tail=TRUE, log.p=FALSE) {
+  # Luganni-Rice saddlepoint CDF with Butler's 2nd continuity correction
+  if (missing(q)|missing(lambda1)) stop("first 2 arguments are required")
+  if (lower.tail) {
+    xm <- -floor(q)-0.5                                     # continuity corrected x
+    # distribution specific variables
+    s <- log(0.5*(xm+sqrt(xm^2+4*lambda2*lambda1))/lambda2) # the saddlepoint
+    K <- lambda2*(exp(s)-1)+lambda1*(exp(-s)-1)             # CGF(s)
+    K2 <- lambda2*exp(s)+lambda1*exp(-s)                    # CGF''(s)
+    # code depending on distribution only through previous variables
+    u2 <- 2*sinh(0.5*s)*sqrt(K2)
+    w2 <- sign(s)*sqrt(2*(s*xm-K))
+    ret <- stats::pnorm(-w2)-stats::dnorm(w2)*(1/w2-1/u2)
+    # avoid numeric problems near the removable discontinuity
+    xe <- (xm+(lambda1-lambda2))/sqrt(lambda1+lambda2)
+    g1 <- (lambda1-lambda2)/(lambda1+lambda2)^1.5
+    ew <- abs(xe) < 1e-4
+    ret[ew] <- (stats::pnorm(-xe)+stats::dnorm(xe)*g1/6*(1-xe^2))[ew]
+  } else ret <- pskellam.sp(-q-1,lambda2,lambda1)
+  if (log.p) log(ret) else ret
 }
 
 #' @noRd
