@@ -1,7 +1,7 @@
 Package: powerHE
 Type: Package
 Title: Power and Sample Size Calculations with Hierarchical Endpoints
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
   person(given = "Sarah",
          family = "Wu",
