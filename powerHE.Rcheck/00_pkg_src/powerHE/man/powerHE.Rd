@@ -84,6 +84,9 @@ powerHE(
   \item \bold{DOOR}: Displays results related to desirability of outcome ranking.
   }}
 }
+\value{
+A named list of results based on the specified 'output' parameter.
+}
 \description{
 This function can calculate sample size given power or vice versa based on
 inputs which represent the marginals of each endpoint. The function assumes

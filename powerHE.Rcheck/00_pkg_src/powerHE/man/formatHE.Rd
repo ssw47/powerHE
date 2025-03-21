@@ -9,6 +9,9 @@ formatHE(result)
 \arguments{
 \item{result}{A list (return object of powerHE).}
 }
+\value{
+A data frame containing the information from parameter 'result' with columns "Label" and "Value".
+}
 \description{
 This function formats the results outputted from the powerHE function. See below (pdf) or use ?powerHE (in R) to view its documentation.
 }

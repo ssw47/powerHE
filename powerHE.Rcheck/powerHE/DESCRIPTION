@@ -1,7 +1,7 @@
 Package: powerHE
 Type: Package
 Title: Power and Sample Size Calculations with Hierarchical Endpoints
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
   person(given = "Sarah",
          family = "Wu",
@@ -16,14 +16,14 @@ Description: Calculate sample size or power for hierarchical endpoints.
   sample size with a given power or to calculate power with a given sample size 
   for hypothesis testing based on win ratios, win odds, net benefit, or DOOR 
   (desirability of outcome ranking) as treatment effect between two groups for 
-  hierarchical endpoints.
+  hierarchical endpoints. The methods of this package are described further in 
+  the paper by Barnhart, H. X. et al. (2024, <doi:10.1080/19466315.2024.2365629>).
 License: GPL (>= 2)
 Encoding: UTF-8
 RoxygenNote: 7.3.2
-Imports: skellam
 NeedsCompilation: no
-Packaged: 2025-01-28 22:22:50 UTC; sarahwu
+Packaged: 2025-03-21 03:07:51 UTC; sarahwu
 Author: Sarah Wu [aut, cre],
   Dylan Thibault [aut]
 Maintainer: Sarah Wu <O2E@duke.edu>
-Built: R 4.4.0; ; 2025-01-28 22:51:39 UTC; unix
+Built: R 4.4.0; ; 2025-03-21 03:09:19 UTC; unix
